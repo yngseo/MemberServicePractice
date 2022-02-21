@@ -21,6 +21,10 @@ dependencies {
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-validation', version: '2.6.2'
     // https://mvnrepository.com/artifact/org.webjars/jquery
     implementation group: 'org.webjars', name: 'jquery', version: '3.6.0'
+    // https://mvnrepository.com/artifact/com.oracle.database.jdbc/ojdbc8
+    implementation group: 'com.oracle.database.jdbc', name: 'ojdbc8', version: '21.5.0.0'
+    // https://mvnrepository.com/artifact/org.mybatis.spring.boot/mybatis-spring-boot-starter
+    implementation group: 'org.mybatis.spring.boot', name: 'mybatis-spring-boot-starter', version: '2.1.4'
 }
 
 tasks.named('test') {
