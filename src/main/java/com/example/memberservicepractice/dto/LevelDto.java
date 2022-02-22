@@ -1,4 +1,4 @@
-package com.example.memberservicepractice.Dto;
+package com.example.memberservicepractice.dto;
 
 public class LevelDto {
 

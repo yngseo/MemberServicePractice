@@ -25,6 +25,7 @@ dependencies {
     implementation group: 'com.oracle.database.jdbc', name: 'ojdbc8', version: '21.5.0.0'
     // https://mvnrepository.com/artifact/org.mybatis.spring.boot/mybatis-spring-boot-starter
     implementation group: 'org.mybatis.spring.boot', name: 'mybatis-spring-boot-starter', version: '2.1.4'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
 }
 
 tasks.named('test') {

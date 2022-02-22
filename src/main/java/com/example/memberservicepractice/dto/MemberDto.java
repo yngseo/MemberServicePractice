@@ -1,11 +1,16 @@
-package com.example.memberservicepractice.Dto;
+package com.example.memberservicepractice.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 
-public class MemberDto {
+public class MemberDto implements UserDetails {
 
     private Integer seq;
     private String id;
@@ -31,6 +36,29 @@ public class MemberDto {
     private String client;
     private String department;
     private String jobGrade;
+    private String userRole;
+
+    public MemberDto(Integer seq, String id, String password, String name, String email, Integer levelSeq, String applicant, Date startDate, Date modifyDate, Date approvalDate, Character accountState, Character passwordState, String phone, String remark, String ceo, String client, String department, String jobGrade, String userRole) {
+        this.seq = seq;
+        this.id = id;
+        this.password = password;
+        this.name = name;
+        this.email = email;
+        this.levelSeq = levelSeq;
+        this.applicant = applicant;
+        this.startDate = startDate;
+        this.modifyDate = modifyDate;
+        this.approvalDate = approvalDate;
+        this.accountState = accountState;
+        this.passwordState = passwordState;
+        this.phone = phone;
+        this.remark = remark;
+        this.ceo = ceo;
+        this.client = client;
+        this.department = department;
+        this.jobGrade = jobGrade;
+        this.userRole = userRole;
+    }
 
     public Integer getSeq() {
         return seq;
@@ -48,6 +76,7 @@ public class MemberDto {
         this.id = id;
     }
 
+    @Override
     public String getPassword() {
         return password;
     }
@@ -175,4 +204,46 @@ public class MemberDto {
     public void setJobGrade(String jobGrade) {
         this.jobGrade = jobGrade;
     }
+
+    public String getUserRole() {
+        return userRole;
+    }
+
+    public void setUserRole(String userRole) {
+        this.userRole = userRole;
+    }
+
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return Collections.singletonList(new SimpleGrantedAuthority(this.userRole));
+    }
+
+    // 시큐리티의 userName
+    // -> 따라서 얘는 인증할 때 id를 봄
+    @Override
+    public String getUsername() {
+        return this.id;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
 }

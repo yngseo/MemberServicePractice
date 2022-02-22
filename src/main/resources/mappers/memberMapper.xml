@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTO Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.example.memberservicepractice.Repository.MemberRepository">
-    <select id="getList" parameterType="com.example.memberservicepractice.Dto.MemberDto" resultType="com.example.memberservicepractice.Dto.MemberDto">
+<mapper namespace="com.example.memberservicepractice.repository.MemberRepository">
+    <select id="getList" parameterType="com.example.memberservicepractice.dto.MemberDto" resultType="com.example.memberservicepractice.dto.MemberDto">
         SELECT * FROM MEMBER
     </select>
 
-    <select id="login" resultType="int">
-        SELECT COUNT(*) FROM MEMBER WHERE ID=#{id} AND PASSWORD=#{password}
+    <select id="getMemberById" resultType="com.example.memberservicepractice.dto.MemberDto">
+        SELECT * FROM MEMBER WHERE ID=#{id}
     </select>
 </mapper>
