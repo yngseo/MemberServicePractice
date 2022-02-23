@@ -1,11 +1,15 @@
 package com.example.memberservicepractice.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import org.hibernate.validator.constraints.Length;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -13,10 +17,17 @@ import java.util.Date;
 public class MemberDto implements UserDetails {
 
     private Integer seq;
+    @NotEmpty
+    @Length(min = 5, max = 20)
     private String id;
     private String password;
+    @NotEmpty
+    @Length(min = 2, max = 10)
     private String name;
+    @NotEmpty
+    @Email
     private String email;
+    @NotNull
     private Integer levelSeq;
     private String applicant;
     @DateTimeFormat(pattern = "yyyy/MM/dd")

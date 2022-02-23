@@ -8,4 +8,19 @@
     <select id="getMemberById" resultType="com.example.memberservicepractice.dto.MemberDto">
         SELECT * FROM MEMBER WHERE ID=#{id}
     </select>
+
+<!--    <select id="getMemberLevel" resultType="String">
+        SELECT L.LEVEL_NAME FROM MEMBER_LEVEL L JOIN MEMBER M ON L.SEQ = M.LEVEL_SEQ WHERE M.ID=#{id}
+    </select>-->
+
+    <select id="checkId" resultType="int">
+        SELECT COUNT(id) FROM MEMBER WHERE ID=#{id}
+    </select>
+
+    <insert id="insertMember" parameterType="com.example.memberservicepractice.dto.MemberDto">
+        <selectKey keyProperty="seq" resultType="int" order="BEFORE">
+            SELECT MEMBER_SEQ.NEXTVAL FROM DUAL
+        </selectKey>
+        INSERT INTO MEMBER VALUES (#{seq}, #{id}, #{password}, #{name}, #{email}, #{levelSeq}, #{applicant}, SYSDATE, null, null, 'D', 'I', #{phone}, #{remark}, #{ceo}, #{client}, #{department}, #{jobGrade}, #{userRole})
+    </insert>
 </mapper>

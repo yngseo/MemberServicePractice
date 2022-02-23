@@ -6,8 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @Controller
@@ -36,15 +38,38 @@ public class MemberController {
     @GetMapping("/success")
     public String userAccess(Model model, Authentication authentication) {
         //Authentication 객체를 통해 유저 정보를 가져올 수 있다.
-        MemberDto memberDto = (MemberDto) authentication.getPrincipal();  //userDetail 객체를 가져옴
+        MemberDto memberDto = getLoginMember(authentication);
         model.addAttribute("info", memberDto.getId() + "의 " + memberDto.getName() + "님");      //유저 아이디
         return "success";
     }
 
     // 계정 생성 테스트
     @GetMapping("/create")
-    public String create() {
+    public String createForm(Model model, Authentication authentication, @ModelAttribute("member") MemberDto memberDto) {
+        memberDto = getLoginMember(authentication);
+        model.addAttribute("info", memberDto.getId());      //유저 아이디
         return "create";
+    }
+
+    @PostMapping("/checkId")
+    @ResponseBody
+    public int checkId(String id) {
+        return memberService.checkId(id);
+    }
+
+    @PostMapping("/create")
+    public String create(@ModelAttribute("member") @Valid MemberDto memberDto, BindingResult bindingResult, Model model, Authentication authentication) {
+        if (bindingResult.hasErrors()) {
+            memberDto = getLoginMember(authentication);
+            model.addAttribute("info", memberDto.getId());      //유저 아이디
+            return "create";
+        }
+        memberService.insertMember(memberDto);
+        return "index";
+    }
+
+    private MemberDto getLoginMember (Authentication authentication) { //로그인된 회원 조회
+        return (MemberDto) authentication.getPrincipal();
     }
 
 }

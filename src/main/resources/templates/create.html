@@ -1,10 +1,138 @@
 <!DOCTYPE html>
-<html lang="en">
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <!--<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <style>
+        .error-text {
+            color: red;
+        }
+
+        .field-error {
+            border: 1px solid red;
+        }
+    </style>
 </head>
 <body>
+<main>
+    <div class="container">
+        <h1>계정 생성</h1>
+        <form action="/create" method="post" th:object="${member}">
+            <div class="form-group">
+                <label th:for="applicant">신청자</label>
+                <span name="applicant" th:text="${info}"></span>
+                <input type="hidden" name="applicant" th:value="${info}">
+            </div>
+            <div class="form-group">
+                <label th:for="levelSeq">계정 유형</label>
+                <input type="radio" name="levelSeq" value="2">직원
+                <input type="radio" name="levelSeq" value="3">고객사
+                <input type="radio" name="levelSeq" value="4">고객
+                <p class="error-text" th:if="${#fields.hasErrors('levelSeq')}" th:errors="*{levelSeq}">Incorrect
+                    date</p>
+            </div>
+            <div class="form-group id-form">
+                <label th:for="id">아이디</label>
+                <input type="text" name="id" class="form-control" placeholder="아이디 입력해주세요" th:field="*{id}"
+                       th:errorclass="field-error" required>
+                <button type="button" class="btn btn-primary" id="checkIdBtn">ID 중복 확인</button>
+                <p class="error-text" th:if="${#fields.hasErrors('id')}" th:errors="*{id}">Incorrect date</p>
+            </div>
+            <div class="form-group">
+                <label th:for="name">이름(회사명)</label>
+                <input type="text" class="form-control" name="name" placeholder="이름(회사명)을 입력해주세요" th:field="*{name}"
+                       th:errorclass="field-error" required>
+                <p class="error-text" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Incorrect date</p>
+            </div>
+            <div class="form-group">
+                <label th:for="email">이메일</label>
+                <input type="email" class="form-control" name="email" placeholder="이메일을 입력해주세요" th:field="*{email}"
+                       th:errorclass="field-error" required>
+                <p class="error-text" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Incorrect date</p>
+            </div>
+            <hr>
+            <div class="form-group ceo-field">
+                <label th:for="ceo">대표자</label>
+                <input type="text" class="form-control" name="ceo" placeholder="대표자를 입력해주세요">
+            </div>
+            <div class="form-group client-field">
+                <label th:for="client">소속회사</label>
+                <input type="text" class="form-control" name="client" placeholder="소속회사를 입력해주세요">
+            </div>
+            <div class="form-group department-field">
+                <label th:for="department">부서</label>
+                <input type="text" class="form-control" name="department" placeholder="부서를 입력해주세요">
+            </div>
+            <div class="form-group jobGrade-field">
+                <label th:for="jobGrade">직급</label>
+                <input type="text" class="form-control" name="jobGrade" placeholder="회사를 입력해주세요">
+            </div>
+            <div class="form-group">
+                <label th:for="phone">연락처</label>
+                <input type="text" class="form-control" name="phone" placeholder="연락처를 입력해주세요">
+            </div>
+            <div class="form-group">
+                <label th:for="remark">비고</label>
+                <input type="text" class="form-control" name="remark" placeholder="비고를 입력해주세요">
+            </div>
+            <button type="submit" class="btn btn-primary">계정 생성 요청</button>
+        </form>
+        <br/>
+    </div>
+</main>
+<script>
+    $(document).ready(function () {
+        $(".ceo-field").css("display", "none");
+        $(".client-field").css("display", "none");
+        $(".department-field").css("display", "none");
+        $(".jobGrade-field").css("display", "none");
+        // 라디오버튼 클릭시 이벤트 발생
+        $("input:radio[name=levelSeq]").click(function () {
+            if ($("input[name=levelSeq]:checked").val() == "2") {
+                $(".ceo-field").css("display", "none");
+                $(".client-field").css("display", "none");
+                $(".department-field").css("display", "block");
+                $(".jobGrade-field").css("display", "block");
+            } else if ($("input[name=levelSeq]:checked").val() == "3") {
+                $(".ceo-field").css("display", "block");
+                $(".client-field").css("display", "none");
+                $(".department-field").css("display", "block");
+                $(".jobGrade-field").css("display", "block");
+            } else if ($("input[name=levelSeq]:checked").val() == "4") {
+                $(".ceo-field").css("display", "none");
+                $(".client-field").css("display", "block");
+                $(".department-field").css("display", "block");
+                $(".jobGrade-field").css("display", "block");
+            }
+        })
+    }); // 다른 방법 필요
 
+    let btnClickCnt = 0;
+    $("#checkIdBtn").click(function () {
+        if ($("input[name=id]").val().length != 0) {
+            btnClickCnt++;
+            $.ajax({
+                url: "/checkId",
+                type: "post",
+                data: {id: $("input[name=id]").val()},
+                datatype: "json",
+                success: function (data) {
+                    if (data > 0) {
+                        $(".error-msg").remove();
+                        $(".able-msg").remove();
+                        $(".id-form").append("<p class='error-msg' style='color: red'>이미 존재하는 ID 입니다.</p>");
+                    } else if (data == 0) {
+                        $(".error-msg").remove();
+                        $(".able-msg").remove();
+                        $(".id-form").append("<p class='able-msg' style='color: green'>사용가능한 ID 입니다.</p>");
+                    }
+                }
+            });
+        }
+    });
+</script>
 </body>
 </html>

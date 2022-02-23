@@ -12,4 +12,8 @@ public interface MemberRepository {
 
     public MemberDto getMemberById(String id);
 
+    public int checkId(String id);
+
+    public int insertMember(MemberDto memberDto);
+
 }
