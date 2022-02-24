@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -17,17 +18,18 @@ import java.util.Date;
 public class MemberDto implements UserDetails {
 
     private Integer seq;
-    @NotEmpty
-    @Length(min = 5, max = 20)
+    @NotEmpty(message = "필수 입력 정보입니다.")
+    @Length(min = 6, max = 20, message = "6~20자여야 합니다.")
+    @Pattern(regexp = "[a-z]+[a-z0-9]{5,19}" , message = "영문자로 시작하는 영문자 또는 숫자로 이루어져야 합니다.")
     private String id;
     private String password;
-    @NotEmpty
-    @Length(min = 2, max = 10)
+    @NotEmpty(message = "필수 입력 정보입니다.")
+    @Length(min = 2, max = 10, message = "2~10자여야 합니다.")
     private String name;
-    @NotEmpty
-    @Email
+    @NotEmpty(message = "필수 입력 정보입니다.")
+    @Email(message = "올바른 형식의 이메일 주소여야 합니다.")
     private String email;
-    @NotNull
+    @NotNull(message = "필수 입력 정보입니다.")
     private Integer levelSeq;
     private String applicant;
     @DateTimeFormat(pattern = "yyyy/MM/dd")

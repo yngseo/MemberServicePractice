@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTO Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.example.memberservicepractice.repository.MemberRepository">
+<mapper namespace="com.example.memberservicepractice.mapper.MemberMapper">
     <select id="getList" parameterType="com.example.memberservicepractice.dto.MemberDto" resultType="com.example.memberservicepractice.dto.MemberDto">
         SELECT * FROM MEMBER
     </select>

@@ -38,7 +38,7 @@ public class MemberController {
     @GetMapping("/success")
     public String userAccess(Model model, Authentication authentication) {
         //Authentication 객체를 통해 유저 정보를 가져올 수 있다.
-        MemberDto memberDto = getLoginMember(authentication);
+        MemberDto memberDto = memberService.getLoginMember(authentication);
         model.addAttribute("info", memberDto.getId() + "의 " + memberDto.getName() + "님");      //유저 아이디
         return "success";
     }
@@ -46,7 +46,7 @@ public class MemberController {
     // 계정 생성 테스트
     @GetMapping("/create")
     public String createForm(Model model, Authentication authentication, @ModelAttribute("member") MemberDto memberDto) {
-        memberDto = getLoginMember(authentication);
+        memberDto = memberService.getLoginMember(authentication);
         model.addAttribute("info", memberDto.getId());      //유저 아이디
         return "create";
     }
@@ -60,7 +60,7 @@ public class MemberController {
     @PostMapping("/create")
     public String create(@ModelAttribute("member") @Valid MemberDto memberDto, BindingResult bindingResult, Model model, Authentication authentication) {
         if (bindingResult.hasErrors()) {
-            memberDto = getLoginMember(authentication);
+            memberDto = memberService.getLoginMember(authentication);
             model.addAttribute("info", memberDto.getId());      //유저 아이디
             return "create";
         }
@@ -68,8 +68,5 @@ public class MemberController {
         return "index";
     }
 
-    private MemberDto getLoginMember (Authentication authentication) { //로그인된 회원 조회
-        return (MemberDto) authentication.getPrincipal();
-    }
 
 }

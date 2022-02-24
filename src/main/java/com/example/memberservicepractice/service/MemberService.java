@@ -1,8 +1,9 @@
 package com.example.memberservicepractice.service;
 
 import com.example.memberservicepractice.dto.MemberDto;
-import com.example.memberservicepractice.repository.MemberRepository;
+import com.example.memberservicepractice.mapper.MemberMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -16,15 +17,15 @@ import java.util.List;
 public class MemberService implements UserDetailsService {
 
     @Autowired
-    MemberRepository memberRepository;
+    MemberMapper memberMapper;
 
     public List<MemberDto> getList() {
-        return memberRepository.getList();
+        return memberMapper.getList();
     }
 
     @Override
     public UserDetails loadUserByUsername(String id) throws UsernameNotFoundException {
-        MemberDto memberDto = memberRepository.getMemberById(id);
+        MemberDto memberDto = memberMapper.getMemberById(id);
         if(memberDto == null) {
             throw new UsernameNotFoundException("User not authorized.");
         }
@@ -32,7 +33,7 @@ public class MemberService implements UserDetailsService {
     }
 
     public int checkId(String id) {
-        return memberRepository.checkId(id);
+        return memberMapper.checkId(id);
     };
 
     @Transactional
@@ -40,7 +41,11 @@ public class MemberService implements UserDetailsService {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         memberDto.setPassword(passwordEncoder.encode("12345")); // 난수 처리 필요
         memberDto.setUserRole("ROLE_USER"); // 스프링 role 처리 필요
-        memberRepository.insertMember(memberDto);
+        memberMapper.insertMember(memberDto);
+    }
+
+    public MemberDto getLoginMember (Authentication authentication) { //로그인된 회원 조회
+        return authentication != null ? (MemberDto) authentication.getPrincipal() : null;
     }
 
 }
