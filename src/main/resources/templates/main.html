@@ -1,10 +1,21 @@
+<!--유저 페이지-->
+<!--user_access.html-->
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>user access</title>
 </head>
 <body>
-
+<nav>
+    <ul>
+        <li><a href="/main">대시보드</a></li>
+        <li th:if="${level.equals('ROLE_ADMIN')}"><a href="/list">계정 목록</a></li>
+    </ul>
+</nav>
+<main>
+    <h1>!!!환영합니다!!!</h1>
+    <div th:text="${info}"></div>
+</main>
 </body>
 </html>

@@ -9,7 +9,9 @@ import java.util.List;
 @Mapper
 public interface MemberMapper {
 
-    public List<MemberDto> getList();
+    public List<MemberDto> getListByAdmin();
+
+    public List<MemberDto> getListByAdmin(Integer levelSeq);
 
     public MemberDto getMemberById(String id);
 

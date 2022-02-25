@@ -19,9 +19,11 @@ public class MemberService implements UserDetailsService {
     @Autowired
     MemberMapper memberMapper;
 
-    public List<MemberDto> getList() {
-        return memberMapper.getList();
+    public List<MemberDto> getListByAdmin() {
+        return memberMapper.getListByAdmin();
     }
+
+    public List<MemberDto> getListByAdmin(Integer levelSeq) {return  memberMapper.getListByAdmin(levelSeq);}
 
     @Override
     public UserDetails loadUserByUsername(String id) throws UsernameNotFoundException {
