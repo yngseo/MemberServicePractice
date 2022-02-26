@@ -46,10 +46,43 @@ public class MemberController {
         return "member/list";
     }
 
+    @GetMapping("/list/{id}")
+    public String get(@PathVariable("id") String id, Model model) {
+        model.addAttribute("member", memberService.loadUserByUsername(id));
+        return "member/get";
+    }
+
     @GetMapping("/filter")
     @ResponseBody
     public List<MemberDto> getListUsingFilter (@RequestParam("levelSeq") Integer levelSeq) {
         return memberService.getListByAdmin(levelSeq);
+    }
+
+    @PutMapping("/approval")
+    @ResponseBody
+    public int updateMemberAccountState(@RequestParam("id") String id) {
+        return memberService.updateMemberAccountState(id);
+    }
+
+    @PutMapping("/initialize")
+    @ResponseBody
+    public int updateMemberPasswordState(@RequestParam("id") String id) {
+        return memberService.updateMemberPasswordState(id);
+    }
+
+    @GetMapping("/password")
+    public String updatePasswordForm() {
+        //MemberDto memberDto = memberService.getLoginMember(authentication);
+        //model.addAttribute("id", memberDto.getId());
+        return "password";
+    }
+
+    @PutMapping("/modifyPassword")
+    @ResponseBody
+    public int updatePassword(Authentication authentication, @RequestParam("password") String password, @RequestParam("newPw") String newPw) {
+        MemberDto memberDto = memberService.getLoginMember(authentication);
+        String id = memberDto.getId();
+        return memberService.updatePassword(password, newPw, id);
     }
 
     // 계정 생성 페이지

@@ -15,6 +15,12 @@ public interface MemberMapper {
 
     public MemberDto getMemberById(String id);
 
+    public int updateMemberAccountState(String id);
+
+    public int updateMemberPasswordState(String password, String id);
+
+    public int updatePassword(String password, String id);
+
     public int checkId(String id);
 
     public int insertMember(MemberDto memberDto);

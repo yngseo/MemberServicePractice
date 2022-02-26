@@ -31,7 +31,7 @@
     </resultMap>
 
     <select id="getListByAdmin" resultMap="MemberDto">
-        SELECT M.SEQ, M.ID, M.NAME, M.EMAIL, L.LEVEL_NAME, M.CLIENT, M.ACCOUNT_STATE FROM MEMBER M JOIN MEMBER_LEVEL L ON M.LEVEL_SEQ = L.SEQ
+        SELECT M.SEQ, M.ID, M.NAME, M.EMAIL, L.LEVEL_NAME, M.CLIENT, M.APPROVAL_DATE FROM MEMBER M JOIN MEMBER_LEVEL L ON M.LEVEL_SEQ = L.SEQ
         <where>
             <if test="levelSeq != null">
                 M.LEVEL_SEQ = #{levelSeq}
@@ -47,9 +47,17 @@
         SELECT SEQ, ID, NAME, PASSWORD, EMAIL, LEVEL_SEQ, APPLICANT, START_DATE, MODIFY_DATE, APPROVAL_DATE, ACCOUNT_STATE, PASSWORD_STATE, PHONE, REMARK, CEO, CLIENT, DEPARTMENT, JOB_GRADE, USER_ROLE FROM MEMBER WHERE ID=#{id}
     </select>
 
-<!--    <select id="getMemberLevel" resultType="String">
-        SELECT L.LEVEL_NAME FROM MEMBER_LEVEL L JOIN MEMBER M ON L.SEQ = M.LEVEL_SEQ WHERE M.ID=#{id}
-    </select>-->
+    <update id="updateMemberAccountState">
+        UPDATE MEMBER SET APPROVAL_DATE = SYSDATE WHERE ID = #{id}
+    </update>
+
+    <update id="updateMemberPasswordState">
+        UPDATE MEMBER SET PASSWORD = #{password}, PASSWORD_STATE = 'I' WHERE ID = #{id}
+    </update>
+
+    <update id="updatePassword">
+        UPDATE MEMBER SET PASSWORD = #{password}, PASSWORD_STATE = 'U' WHERE ID = #{id}
+    </update>
 
     <select id="checkId" resultType="int">
         SELECT COUNT(id) FROM MEMBER WHERE ID=#{id}
@@ -59,6 +67,6 @@
         <selectKey keyProperty="seq" resultType="int" order="BEFORE">
             SELECT MEMBER_SEQ.NEXTVAL FROM DUAL
         </selectKey>
-        INSERT INTO MEMBER VALUES (#{seq}, #{id}, #{password}, #{name}, #{email}, #{levelSeq}, #{applicant}, SYSDATE, null, null, 'D', 'I', #{phone}, #{remark}, #{ceo}, #{client}, #{department}, #{jobGrade}, #{userRole})
+        INSERT INTO MEMBER VALUES (#{seq}, #{id}, #{password}, #{name}, #{email}, #{levelSeq}, #{applicant}, SYSDATE, null, null, 'A', 'I', #{phone}, #{remark}, #{ceo}, #{client}, #{department}, #{jobGrade}, #{userRole})
     </insert>
 </mapper>

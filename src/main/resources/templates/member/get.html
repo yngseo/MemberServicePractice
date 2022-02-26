@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css"
+          integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
+            integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-fQybjgWLrvvRgtW6bFlB7jaZrFsaBXjsOMm/tB9LTS58ONXgqbR9W8oWht/amnpF"
+            crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+<body>
+<main>
+    <div class="container">
+        ID : <span class="id" th:text="${member.id}"></span>
+        <span th:if="${member.approvalDate == null}"><button class="btn btn-primary approval-btn"
+                                                             type="button">승인</button></span><br>
+        회사명 : <br>
+        이름 : <span th:text="${member.name}"></span><br>
+        이메일 : <span th:text="${member.email}"></span><br>
+        비밀번호 : <span th:if="${member.approvalDate == null}">승인 대기 중</span>
+        <span th:unless="${member.approvalDate == null}"><button class="btn btn-primary password-btn"
+                                                                 type="button">초기화</button></span><br>
+    </div>
+</main>
+<script>
+    $(".approval-btn").click(function () {
+        if (confirm("해당 계정 사용을 승인 하시겠습니까?") == true) {
+            $.ajax({
+                url: "/approval",
+                type: "PUT",
+                data: {id: $(".id").text()},
+                dataType: "json",
+                success: function (data) {
+                    console.log(data);
+                    if (data == 1) {
+                        alert("승인 되었습니다.");
+                        location.href="/list";
+                    } else {
+                        alert("ERROR");
+                        return false;
+                    }
+                }
+            });
+        } else {
+            return false;
+        }
+    });
+
+    $(".password-btn").click(function () {
+        if (confirm("해당 계정 비밀번호를 초기화 하시겠습니까?") == true) {
+            $.ajax({
+                url: "/initialize",
+                type: "PUT",
+                data: {id: $(".id").text()},
+                dataType: "json",
+                success: function (data) {
+                    if (data == 1) {
+                        alert("초기화 되었습니다.");
+                        location.href="/list";
+                    } else {
+                        alert("ERROR");
+                        return false;
+                    }
+                }
+            });
+        } else {
+            return false;
+        }
+    });
+</script>
+</body>
+</html>

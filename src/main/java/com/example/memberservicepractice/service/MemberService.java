@@ -34,6 +34,27 @@ public class MemberService implements UserDetailsService {
         return memberDto;
     }
 
+    public int updateMemberAccountState(String id) {
+        return memberMapper.updateMemberAccountState(id);
+    }
+
+    public int updateMemberPasswordState(String id) {
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        String password = passwordEncoder.encode("00000");
+        return memberMapper.updateMemberPasswordState(password, id);
+    }
+
+    public int updatePassword(String password, String newPw, String id) {
+        String currentPw = password;
+        String inputPw = newPw;
+        MemberDto memberDto = memberMapper.getMemberById(id);
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        if (passwordEncoder.matches(currentPw, memberDto.getPassword())) {
+            return memberMapper.updatePassword(passwordEncoder.encode(inputPw), id);
+        }
+        return 0;
+    };
+
     public int checkId(String id) {
         return memberMapper.checkId(id);
     };
