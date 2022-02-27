@@ -43,6 +43,12 @@
         ORDER BY M.SEQ DESC
     </select>
 
+    <select id="getListByClient" resultMap="MemberDto">
+        SELECT M.SEQ, M.ID, M.NAME, M.EMAIL, L.LEVEL_NAME, M.CLIENT, M.APPROVAL_DATE FROM MEMBER M JOIN MEMBER_LEVEL L ON M.LEVEL_SEQ = L.SEQ
+        WHERE M.LEVEL_SEQ = 4
+        ORDER BY M.SEQ DESC
+    </select>
+
     <select id="getMemberById" resultType="com.example.memberservicepractice.dto.MemberDto">
         SELECT SEQ, ID, NAME, PASSWORD, EMAIL, LEVEL_SEQ, APPLICANT, START_DATE, MODIFY_DATE, APPROVAL_DATE, ACCOUNT_STATE, PASSWORD_STATE, PHONE, REMARK, CEO, CLIENT, DEPARTMENT, JOB_GRADE, USER_ROLE FROM MEMBER WHERE ID=#{id}
     </select>
@@ -69,4 +75,8 @@
         </selectKey>
         INSERT INTO MEMBER VALUES (#{seq}, #{id}, #{password}, #{name}, #{email}, #{levelSeq}, #{applicant}, SYSDATE, null, null, 'A', 'I', #{phone}, #{remark}, #{ceo}, #{client}, #{department}, #{jobGrade}, #{userRole})
     </insert>
+
+    <select id="getClientList" resultType="String">
+        SELECT NAME FROM MEMBER WHERE LEVEL_SEQ = 3
+    </select>
 </mapper>
