@@ -1,12 +1,14 @@
 package com.example.memberservicepractice.controller;
 
 import com.example.memberservicepractice.dto.MemberDto;
+import com.example.memberservicepractice.config.ValidationGroups;
 import com.example.memberservicepractice.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -37,6 +39,13 @@ public class MemberController {
         model.addAttribute("info", memberDto.getId() + "의 " + memberDto.getName() + "님");      //유저 아이디
         model.addAttribute("level", memberDto.getUserRole());
         return "main";
+    }
+
+    @GetMapping("/myInfo")
+    public String myInfoForm(Model model, Authentication authentication) {
+        MemberDto memberDto = memberService.getLoginMember(authentication);
+        model.addAttribute("info", memberDto);
+        return "myInfo";
     }
 
     // 계정 조회 페이지
@@ -71,18 +80,24 @@ public class MemberController {
     }
 
     @GetMapping("/password")
-    public String updatePasswordForm() {
+    public String updatePasswordForm(@ModelAttribute("member") MemberDto memberDto) {
         //MemberDto memberDto = memberService.getLoginMember(authentication);
         //model.addAttribute("id", memberDto.getId());
         return "password";
     }
 
-    @PutMapping("/modifyPassword")
-    @ResponseBody
-    public int updatePassword(Authentication authentication, @RequestParam("password") String password, @RequestParam("newPw") String newPw) {
-        MemberDto memberDto = memberService.getLoginMember(authentication);
+    @PutMapping("/password")
+    public String updatePassword(Model model, Authentication authentication, @RequestParam("currentPw") String currentPw, @RequestParam("password") String password, @Validated(ValidationGroups.password.class) @ModelAttribute("member") MemberDto memberDto, BindingResult bindingResult) {
+        memberDto = memberService.getLoginMember(authentication);
         String id = memberDto.getId();
-        return memberService.updatePassword(password, newPw, id);
+        if (memberService.updatePassword(currentPw, password, id) == 0) {
+            model.addAttribute("message","비밀번호가 일치하지 않습니다.");
+            return "password";
+        } else if (bindingResult.hasErrors()) {
+            return "password";
+        }
+        memberService.updatePassword(currentPw, password, id);
+        return "login";
     }
 
     // 계정 생성 페이지
@@ -90,6 +105,7 @@ public class MemberController {
     public String createForm(Model model, Authentication authentication, @ModelAttribute("member") MemberDto memberDto) {
         memberDto = memberService.getLoginMember(authentication);
         model.addAttribute("info", memberDto.getId());      //유저 아이디
+        model.addAttribute("client", memberService.getClientList());
         return "member/create";
     }
 
@@ -106,10 +122,11 @@ public class MemberController {
         if (bindingResult.hasErrors()) {
             memberDto = memberService.getLoginMember(authentication);
             model.addAttribute("info", memberDto.getId());      //유저 아이디
+            model.addAttribute("client", memberService.getClientList());
             return "member/create";
         }
         memberService.insertMember(memberDto);
-        return "member/list";
+        return "redirect:/list";
     }
 
 

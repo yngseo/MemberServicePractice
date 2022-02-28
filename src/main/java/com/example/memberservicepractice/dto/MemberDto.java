@@ -1,5 +1,6 @@
 package com.example.memberservicepractice.dto;
 
+import com.example.memberservicepractice.config.ValidationGroups;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
@@ -24,6 +25,9 @@ public class MemberDto implements UserDetails {
     @Length(min = 6, max = 20, message = "6~20자여야 합니다.")
     @Pattern(regexp = "[a-z]+[a-z0-9]{5,19}" , message = "영문자로 시작하는 영문자 또는 숫자로 이루어져야 합니다.")
     private String id;
+    @NotEmpty(message = "필수 입력 정보입니다.", groups = ValidationGroups.password.class)
+    @Pattern(regexp="(?=.*[0-9])(?=.*[a-z])(?=.*\\W)(?=\\S+$).{6,12}",
+            message = "비밀번호는 영문자와 숫자, 특수기호가 적어도 1개 이상 포함된 6자~12자의 비밀번호여야 합니다.", groups = ValidationGroups.password.class)
     private String password;
     @NotEmpty(message = "필수 입력 정보입니다.")
     @Length(min = 2, max = 10, message = "2~10자여야 합니다.")
@@ -71,21 +75,27 @@ public class MemberDto implements UserDetails {
     @Override
     public boolean isAccountNonExpired() {
         return true;
-    }
+    } // 계정 만료 여부
 
     @Override
     public boolean isAccountNonLocked() {
+        if (approvalDate == null) {
+            return false;
+        }
         return true;
-    }
+    } // 계정 잠금 여부
 
     @Override
     public boolean isCredentialsNonExpired() {
+        if (passwordState.equals("I")) {
+            return false;
+        }
         return true;
-    }
+    }  // 계정 비밀번호 만료 여부
 
     @Override
     public boolean isEnabled() {
         return true;
-    }
+    } // 계정 사용 가능 여부
 
 }

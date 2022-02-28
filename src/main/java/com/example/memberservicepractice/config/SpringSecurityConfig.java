@@ -19,11 +19,13 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
+                .csrf().disable()
                 .authorizeRequests()
                 .antMatchers( "/login", "/fail", "/resources/**").permitAll() // 로그인 권한은 누구나, resources파일도 모든권한
-                // USER, ADMIN 접근 허용
-                .antMatchers("/main").hasAnyRole("ADMIN","USER")
-                .antMatchers("/create").hasRole("ADMIN")
+                // 접근 허용
+                .antMatchers("/main","/password").hasAnyRole("ADMIN","EMP","CLIENT","CLIENTEMP")
+                .antMatchers("/list").hasAnyRole("ADMIN","CLIENT")
+                .antMatchers("/create").hasAnyRole("ADMIN","CLIENT")
                 .and()
                 .formLogin()
                 .loginPage("/login")
@@ -31,7 +33,10 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .defaultSuccessUrl("/main")
                 .failureUrl("/fail") // 인증에 실패했을 때 보여주는 화면 url, 로그인 form으로 파라미터값 error=true로 보낸다.
                 .and()
-                .csrf().disable();		//로그인 창
+                .logout()
+                .logoutUrl("/logout")
+                .logoutSuccessUrl("/login")
+                .invalidateHttpSession(true);
     }
 
     /**

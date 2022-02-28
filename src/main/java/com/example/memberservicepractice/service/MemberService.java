@@ -25,6 +25,8 @@ public class MemberService implements UserDetailsService {
 
     public List<MemberDto> getListByAdmin(Integer levelSeq) {return  memberMapper.getListByAdmin(levelSeq);}
 
+    public List<MemberDto> getListByClient() {return memberMapper.getListByClient();}
+
     @Override
     public UserDetails loadUserByUsername(String id) throws UsernameNotFoundException {
         MemberDto memberDto = memberMapper.getMemberById(id);
@@ -40,17 +42,15 @@ public class MemberService implements UserDetailsService {
 
     public int updateMemberPasswordState(String id) {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        String password = passwordEncoder.encode("00000");
+        String password = passwordEncoder.encode("00000"); // 난수 처리 필요
         return memberMapper.updateMemberPasswordState(password, id);
     }
 
-    public int updatePassword(String password, String newPw, String id) {
-        String currentPw = password;
-        String inputPw = newPw;
+    public int updatePassword(String currentPw, String password, String id) {
         MemberDto memberDto = memberMapper.getMemberById(id);
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         if (passwordEncoder.matches(currentPw, memberDto.getPassword())) {
-            return memberMapper.updatePassword(passwordEncoder.encode(inputPw), id);
+            return memberMapper.updatePassword(passwordEncoder.encode(password), id);
         }
         return 0;
     };
@@ -63,12 +63,20 @@ public class MemberService implements UserDetailsService {
     public void insertMember(MemberDto memberDto){
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         memberDto.setPassword(passwordEncoder.encode("12345")); // 난수 처리 필요
-        memberDto.setUserRole("ROLE_USER"); // 스프링 role 처리 필요
+        if (memberDto.getLevelSeq() == 2) {
+            memberDto.setUserRole("ROLE_EMP");
+        } else if (memberDto.getLevelSeq() == 3) {
+            memberDto.setUserRole("ROLE_CLIENT");
+        } else if (memberDto.getLevelSeq() == 4) {
+            memberDto.setUserRole("ROLE_CLIENTEMP");
+        }
         memberMapper.insertMember(memberDto);
     }
 
     public MemberDto getLoginMember (Authentication authentication) { //로그인된 회원 조회
         return authentication != null ? (MemberDto) authentication.getPrincipal() : null;
     }
+
+    public String getClientList() {return memberMapper.getClientList();}
 
 }

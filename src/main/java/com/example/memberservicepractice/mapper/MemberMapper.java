@@ -13,6 +13,8 @@ public interface MemberMapper {
 
     public List<MemberDto> getListByAdmin(Integer levelSeq);
 
+    public List<MemberDto> getListByClient();
+
     public MemberDto getMemberById(String id);
 
     public int updateMemberAccountState(String id);
@@ -24,5 +26,7 @@ public interface MemberMapper {
     public int checkId(String id);
 
     public int insertMember(MemberDto memberDto);
+
+    public String getClientList();
 
 }
