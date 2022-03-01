@@ -14,7 +14,7 @@
         ID : <span th:text="${info.id}"></span><br>
         이름 : <span th:text="${info.name}"></span><br>
         이메일 : <span th:text="${info.email}"></span><br>
-        비밀번호 :<button class="btn btn-primary modify-pw-btn" type="button" onclick="location.href='/password'">변경</button>
+        비밀번호 :<button class="btn btn-primary modify-pw-btn" type="button"><a th:href="@{/password/{member}(member=${info.id})}">변경</a></button>
         <hr>
 
         <button type="button" onclick="location.href='/main'">메인으로</button>

@@ -87,7 +87,7 @@ public class MemberDto implements UserDetails {
 
     @Override
     public boolean isCredentialsNonExpired() {
-        if (passwordState.equals("I")) {
+        if (passwordState.equals('I')) {
             return false;
         }
         return true;

@@ -3,6 +3,7 @@ package com.example.memberservicepractice.controller;
 import com.example.memberservicepractice.dto.MemberDto;
 import com.example.memberservicepractice.config.ValidationGroups;
 import com.example.memberservicepractice.service.MemberService;
+import com.example.memberservicepractice.service.MemberServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -20,16 +21,16 @@ public class MemberController {
     @Autowired
     MemberService memberService;
 
-    @GetMapping("/login")
-    public String login() {
+    @RequestMapping(value = {"/login"}, method = {RequestMethod.GET, RequestMethod.POST})
+    public String login(Model model) {
         return "login";
     }
 
-    // 로그인 실패 페이지
+    /*// 로그인 실패 페이지
     @GetMapping("/fail")
     public String accessDenied() {
         return "fail";
-    }
+    }*/
 
     // 로그인 성공 페이지
     @GetMapping("/main")
@@ -79,17 +80,17 @@ public class MemberController {
         return memberService.updateMemberPasswordState(id);
     }
 
-    @GetMapping("/password")
-    public String updatePasswordForm(@ModelAttribute("member") MemberDto memberDto) {
-        //MemberDto memberDto = memberService.getLoginMember(authentication);
-        //model.addAttribute("id", memberDto.getId());
+    @GetMapping("/password/{id}")
+    public String updatePasswordForm(@ModelAttribute("member") MemberDto memberDto, @PathVariable("id") String id) {
+        /*memberDto = memberService.getLoginMember(authentication);
+        model.addAttribute("loginId", memberDto.getId());*/
         return "password";
     }
 
-    @PutMapping("/password")
-    public String updatePassword(Model model, Authentication authentication, @RequestParam("currentPw") String currentPw, @RequestParam("password") String password, @Validated(ValidationGroups.password.class) @ModelAttribute("member") MemberDto memberDto, BindingResult bindingResult) {
-        memberDto = memberService.getLoginMember(authentication);
-        String id = memberDto.getId();
+    @PutMapping("/password/{id}")
+    public String updatePassword(Model model, @PathVariable("id") String id, @RequestParam("currentPw") String currentPw, @RequestParam("password") String password, @Validated(ValidationGroups.password.class) @ModelAttribute("member") MemberDto memberDto, BindingResult bindingResult) {
+        /*memberDto = memberService.getLoginMember(authentication);
+        String id = memberDto.getId();*/
         if (memberService.updatePassword(currentPw, password, id) == 0) {
             model.addAttribute("message","비밀번호가 일치하지 않습니다.");
             return "password";
@@ -97,7 +98,7 @@ public class MemberController {
             return "password";
         }
         memberService.updatePassword(currentPw, password, id);
-        return "login";
+        return "redirect:/login";
     }
 
     // 계정 생성 페이지

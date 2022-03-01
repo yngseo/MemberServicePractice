@@ -27,6 +27,6 @@ public interface MemberMapper {
 
     public int insertMember(MemberDto memberDto);
 
-    public String getClientList();
+    public List<String> getClientList();
 
 }
