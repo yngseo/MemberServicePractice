@@ -1,6 +1,6 @@
 package com.example.memberservicepractice.dto;
 
-import com.example.memberservicepractice.config.ValidationGroups;
+import com.example.memberservicepractice.security.ValidationGroups;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;

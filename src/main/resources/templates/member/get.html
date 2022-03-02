@@ -16,14 +16,16 @@
 <main>
     <div class="container">
         ID : <span class="id" th:text="${member.id}"></span>
-        <span th:if="${member.approvalDate == null}"><button class="btn btn-primary approval-btn"
+        <span th:if="${level.equals(1)} and ${member.approvalDate == null}"><button class="btn btn-primary approval-btn"
                                                              type="button">승인</button></span><br>
         회사명 : <br>
         이름 : <span th:text="${member.name}"></span><br>
         이메일 : <span th:text="${member.email}"></span><br>
         비밀번호 : <span th:if="${member.approvalDate == null}">승인 대기 중</span>
-        <span th:unless="${member.approvalDate == null}"><button class="btn btn-primary password-btn"
-                                                                 type="button">초기화</button></span><br>
+        <span th:if="${level.equals(1)} and ${member.approvalDate != null}"><button class="btn btn-primary password-btn"
+                                                                 type="button">초기화</button></span>
+        <span th:if="${level.equals(3)} and ${member.approvalDate != null}">사용 가능</span>
+        <br>
     </div>
 </main>
 <script>

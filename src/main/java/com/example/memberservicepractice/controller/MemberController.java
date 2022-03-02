@@ -1,9 +1,9 @@
 package com.example.memberservicepractice.controller;
 
 import com.example.memberservicepractice.dto.MemberDto;
-import com.example.memberservicepractice.config.ValidationGroups;
+import com.example.memberservicepractice.security.ValidationGroups;
 import com.example.memberservicepractice.service.MemberService;
-import com.example.memberservicepractice.service.MemberServiceImpl;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -51,20 +51,31 @@ public class MemberController {
 
     // 계정 조회 페이지
     @GetMapping("/list")
-    public String memberList (Model model) {
-        model.addAttribute("list", memberService.getListByAdmin());
+    public String memberList (Model model, Authentication authentication) {
+        MemberDto memberDto = memberService.getLoginMember(authentication);
+        model.addAttribute("level", memberDto.getLevelSeq());
+        if (memberDto.getLevelSeq() == 1) {
+            model.addAttribute("list", memberService.getListByAdmin());
+        } else if (memberDto.getLevelSeq() == 3) {
+            model.addAttribute("list", memberService.getListByClient());
+        }
         return "member/list";
     }
 
     @GetMapping("/list/{id}")
-    public String get(@PathVariable("id") String id, Model model) {
+    public String get(@PathVariable("id") String id, Model model, Authentication authentication) {
+        MemberDto memberDto = memberService.getLoginMember(authentication);
+        model.addAttribute("level", memberDto.getLevelSeq());
         model.addAttribute("member", memberService.loadUserByUsername(id));
         return "member/get";
     }
 
     @GetMapping("/filter")
+    @JsonIgnore
     @ResponseBody
-    public List<MemberDto> getListUsingFilter (@RequestParam("levelSeq") Integer levelSeq) {
+    public List<MemberDto> getListUsingFilter (@RequestParam("levelSeq") Integer levelSeq, Model model, Authentication authentication) {
+        MemberDto memberDto = memberService.getLoginMember(authentication);
+        model.addAttribute("member", memberDto);
         return memberService.getListByAdmin(levelSeq);
     }
 
@@ -105,7 +116,7 @@ public class MemberController {
     @GetMapping("/create")
     public String createForm(Model model, Authentication authentication, @ModelAttribute("member") MemberDto memberDto) {
         memberDto = memberService.getLoginMember(authentication);
-        model.addAttribute("info", memberDto.getId());      //유저 아이디
+        model.addAttribute("info", memberDto);
         model.addAttribute("client", memberService.getClientList());
         return "member/create";
     }
@@ -121,8 +132,9 @@ public class MemberController {
     @PostMapping("/create")
     public String create(@ModelAttribute("member") @Valid MemberDto memberDto, BindingResult bindingResult, Model model, Authentication authentication) {
         if (bindingResult.hasErrors()) {
+            System.out.println("에러 : " + bindingResult.getFieldErrors());
             memberDto = memberService.getLoginMember(authentication);
-            model.addAttribute("info", memberDto.getId());      //유저 아이디
+            model.addAttribute("info", memberDto);      //유저 아이디
             model.addAttribute("client", memberService.getClientList());
             return "member/create";
         }

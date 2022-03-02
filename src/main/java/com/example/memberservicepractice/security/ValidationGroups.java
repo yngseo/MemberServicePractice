@@ -1,4 +1,4 @@
-package com.example.memberservicepractice.config;
+package com.example.memberservicepractice.security;
 
 public class ValidationGroups {
     public interface password {};

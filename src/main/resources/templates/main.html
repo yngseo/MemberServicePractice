@@ -10,7 +10,7 @@
 <nav>
     <ul>
         <li><a href="/main">대시보드</a></li>
-        <li th:if="${level.equals('ROLE_ADMIN')}"><a href="/list">계정 목록</a></li>
+        <li th:if="${level.equals('ROLE_ADMIN')} or ${level.equals('ROLE_CLIENT')}"><a href="/list">계정 목록</a></li>
     </ul>
 </nav>
 <main>

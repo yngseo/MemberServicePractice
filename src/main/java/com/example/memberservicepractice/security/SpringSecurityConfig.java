@@ -1,4 +1,4 @@
-package com.example.memberservicepractice.config;
+package com.example.memberservicepractice.security;
 
 import com.example.memberservicepractice.service.MemberServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +33,6 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/main").hasAnyRole("ADMIN","EMP","CLIENT","CLIENTEMP")
                 .antMatchers("/list").hasAnyRole("ADMIN","CLIENT")
                 .antMatchers("/create").hasAnyRole("ADMIN","CLIENT")
-                .anyRequest().authenticated()
                 .and()
                 .csrf().disable()
                 .headers().frameOptions().disable()

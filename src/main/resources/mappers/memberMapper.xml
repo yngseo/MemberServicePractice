@@ -31,7 +31,7 @@
     </resultMap>
 
     <select id="getListByAdmin" resultMap="MemberDto">
-        SELECT M.SEQ, M.ID, M.NAME, M.EMAIL, L.LEVEL_NAME, M.CLIENT, M.APPROVAL_DATE FROM MEMBER M JOIN MEMBER_LEVEL L ON M.LEVEL_SEQ = L.SEQ
+        SELECT M.*, L.LEVEL_NAME FROM MEMBER M JOIN MEMBER_LEVEL L ON M.LEVEL_SEQ = L.SEQ
         <where>
             <if test="levelSeq != null">
                 M.LEVEL_SEQ = #{levelSeq}
