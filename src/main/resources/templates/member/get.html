@@ -18,7 +18,9 @@
         ID : <span class="id" th:text="${member.id}"></span>
         <span th:if="${level.equals(1)} and ${member.approvalDate == null}"><button class="btn btn-primary approval-btn"
                                                              type="button">승인</button></span><br>
-        회사명 : <br>
+        회사명 : <span th:if="${member.levelSeq == 2}">CMT정보통신</span>
+                <span th:if="${member.levelSeq == 3}" th:text="${member.name}"></span>
+                <span th:if="${member.levelSeq == 4}" th:text="${member.client}"></span><br>
         이름 : <span th:text="${member.name}"></span><br>
         이메일 : <span th:text="${member.email}"></span><br>
         비밀번호 : <span th:if="${member.approvalDate == null}">승인 대기 중</span>

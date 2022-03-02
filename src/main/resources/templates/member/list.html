@@ -11,6 +11,7 @@
 <main>
     <div class="container">
     <ul class="member-filter" th:if="${level.equals(1)}">
+        <li data-level="total">전체</li>
         <li data-level="2">직원</li>
         <li data-level="3">고객사</li>
         <li data-level="4">고객</li>
@@ -21,8 +22,10 @@
             <th scope="col">아이디</th>
             <th scope="col">이름</th>
             <th scope="col">이메일</th>
-            <th scope="col">등급</th>
-            <th scope="col">소속</th>
+            <th th:if="${level.equals(1)}" scope="col">등급</th>
+            <th th:if="${level.equals(1)}" scope="col">소속</th>
+            <th th:if="${level.equals(3)}" scope="col">부서</th>
+            <th th:if="${level.equals(3)}" scope="col">직급</th>
             <th scope="col">상태</th>
         </tr>
         </thead>
@@ -31,10 +34,12 @@
             <td th:text="${list.id}"></td>
             <td th:text="${list.name}"></td>
             <td th:text="${list.email}"></td>
-            <td th:text="${list.levelDto.levelName}"></td>
-            <td th:if="${list.levelDto.levelName == '직원'}">CMT정보통신</td>
-            <td th:if="${list.levelDto.levelName == '고객사'}" th:text="${list.name}"></td>
-            <td th:if="${list.levelDto.levelName == '고객'}" th:text="${list.client}"></td>
+            <td th:if="${level.equals(1)}" th:text="${list.levelDto.levelName}"></td>
+            <td th:if="${level.equals(3)}" th:text="${list.department}"></td>
+            <td th:if="${level.equals(1)} and ${list.levelDto.levelName == '직원'}">CMT정보통신</td>
+            <td th:if="${level.equals(1)} and ${list.levelDto.levelName == '고객사'}" th:text="${list.name}"></td>
+            <td th:if="${level.equals(1)} and ${list.levelDto.levelName == '고객'}" th:text="${list.client}"></td>
+            <td th:if="${level.equals(3)}" th:text="${list.jobGrade}"></td>
             <td th:if="${list.approvalDate == null}">미승인</td>
             <td th:unless="${list.approvalDate == null}">승인</td>
         </tr>
@@ -45,37 +50,39 @@
 </main>
 <script>
     $(".member-filter li").click(function() {
-        $.ajax({
-            url: "/filter",
-            type: "GET",
-            data: {levelSeq : $(this).attr('data-level')},
-            dataType: "json",
-            success: function(data){
-                console.log(data);
+        if ($(this).attr('data-level') == 'total') {
+            location.href="/list"
+        } else {
+            $.ajax({
+                url: "/filter",
+                type: "GET",
+                data: {levelSeq : $(this).attr('data-level')},
+                dataType: "json",
+                success: function(data){
+                    let client = '';
+                    let state = '';
 
-                let client = '';
-                let state = '';
+                    $(".table tbody").empty();
+                    $.each(data, function (index, el) {
+                        if (el.levelDto.levelName == '직원') {
+                            client = 'CMT정보통신';
+                        } else if (el.levelDto.levelName == '고객사') {
+                            client = el.name;
+                        } else if (el.levelDto.levelName == '고객') {
+                            client = el.client;
+                        }
 
-                $(".table tbody").empty();
-                $.each(data, function (index, el) {
-                    if (el.levelDto.levelName == '직원') {
-                        client = 'CMT정보통신';
-                    } else if (el.levelDto.levelName == '고객사') {
-                        client = el.name;
-                    } else if (el.levelDto.levelName == '고객') {
-                        client = el.client;
-                    }
+                        if (el.approvalDate == null) {
+                            state = '미승인'
+                        } else {
+                            state = '승인'
+                        }
 
-                    if (el.approvalDate == null) {
-                        state = '미승인'
-                    } else {
-                        state = '승인'
-                    }
-
-                    $(".table tbody").append("<tr><td>"+el.id+"</td><td>"+el.name+"</td><td>"+el.email+"</td><td>"+el.levelDto.levelName+"</td><td>"+client+"</td><td>"+state+"</td></tr>")
-                })
-            }
-        });
+                        $(".table tbody").append("<tr><td>"+el.id+"</td><td>"+el.name+"</td><td>"+el.email+"</td><td>"+el.levelDto.levelName+"</td><td>"+client+"</td><td>"+state+"</td></tr>")
+                    })
+                }
+            });
+        }
     });
 
     $("tbody tr").click(function() {

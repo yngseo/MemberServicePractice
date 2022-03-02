@@ -12,7 +12,7 @@ public interface MemberService {
 
     public List<MemberDto> getListByAdmin(Integer levelSeq);
 
-    public List<MemberDto> getListByClient();
+    public List<MemberDto> getListByClient(String name);
 
     public UserDetails loadUserByUsername(String id);
 

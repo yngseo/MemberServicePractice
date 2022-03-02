@@ -70,7 +70,7 @@
             <div class="form-group client-field" th:if="${info.levelSeq == 3}">
                 <label th:for="client">소속회사</label>
                 <!--<input type="text" class="form-control" name="client" placeholder="소속회사를 입력해주세요">-->
-                <span name="applicant" th:text="${info.id}"></span>
+                <span name="applicant" th:text="${info.name}"></span>
                 <input type="hidden" name="client" th:value="${info.name}">
             </div>
             <div class="form-group department-field">
@@ -111,6 +111,7 @@
 
         // 라디오버튼 클릭시 이벤트 발생
         $("input:radio[name=levelSeq]").click(function () {
+            cleanField();
             if ($("input[name=levelSeq]:checked").val() == "2") {
                 $(".ceo-field").css("display", "none");
                 $(".client-field").css("display", "none");
@@ -183,6 +184,13 @@
         })
     }
 
+    // Radio 변경 시 필드 초기화
+    function cleanField () {
+        $("input[name=ceo]").val("");
+        $("select[name=client]").val("").prop("selected", true);
+        $("input[name=department]").val("");
+        $("input[name=jobGrade]").val("");
+    }
 /*    function checkIdReg (value) {
         if (!idReg.test(value)) {
             $(".id-form p").remove();

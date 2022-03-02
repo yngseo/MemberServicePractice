@@ -45,7 +45,7 @@
 
     <select id="getListByClient" resultMap="MemberDto">
         SELECT M.SEQ, M.ID, M.NAME, M.EMAIL, L.LEVEL_NAME, M.CLIENT, M.APPROVAL_DATE FROM MEMBER M JOIN MEMBER_LEVEL L ON M.LEVEL_SEQ = L.SEQ
-        WHERE M.LEVEL_SEQ = 4
+        WHERE M.LEVEL_SEQ = 4 AND CLIENT = #{name}
         ORDER BY M.SEQ DESC
     </select>
 

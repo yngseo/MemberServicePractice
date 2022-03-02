@@ -54,10 +54,11 @@ public class MemberController {
     public String memberList (Model model, Authentication authentication) {
         MemberDto memberDto = memberService.getLoginMember(authentication);
         model.addAttribute("level", memberDto.getLevelSeq());
+        String name = memberDto.getName();
         if (memberDto.getLevelSeq() == 1) {
             model.addAttribute("list", memberService.getListByAdmin());
         } else if (memberDto.getLevelSeq() == 3) {
-            model.addAttribute("list", memberService.getListByClient());
+            model.addAttribute("list", memberService.getListByClient(name));
         }
         return "member/list";
     }

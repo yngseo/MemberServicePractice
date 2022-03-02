@@ -31,8 +31,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers( "/login", "/fail", "/password", "/resources/**").permitAll() // 로그인 권한은 누구나, resources파일도 모든권한
                 // 접근 허용
                 .antMatchers("/main").hasAnyRole("ADMIN","EMP","CLIENT","CLIENTEMP")
-                .antMatchers("/list").hasAnyRole("ADMIN","CLIENT")
-                .antMatchers("/create").hasAnyRole("ADMIN","CLIENT")
+                .antMatchers("/list", "/create").hasAnyRole("ADMIN","CLIENT")
                 .and()
                 .csrf().disable()
                 .headers().frameOptions().disable()

@@ -13,7 +13,7 @@ public interface MemberMapper {
 
     public List<MemberDto> getListByAdmin(Integer levelSeq);
 
-    public List<MemberDto> getListByClient();
+    public List<MemberDto> getListByClient(String name);
 
     public MemberDto getMemberById(String id);
 

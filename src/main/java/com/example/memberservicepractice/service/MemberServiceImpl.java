@@ -29,8 +29,8 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
         return memberMapper.getListByAdmin(levelSeq);
     }
 
-    public List<MemberDto> getListByClient() {
-        return memberMapper.getListByClient();
+    public List<MemberDto> getListByClient(String name) {
+        return memberMapper.getListByClient(name);
     }
 
     @Override
