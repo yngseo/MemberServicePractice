@@ -14,8 +14,6 @@ public interface MemberService {
 
     public List<MemberDto> getListByClient(String name); // 고객사 계정 전체 조회
 
-    public UserDetails loadUserByUsername(String id);
-
     public int updateMemberAccountState(String id); // 계정 승인
 
     public int updateMemberPasswordState(String id); // 비밀번호 초기화 해제

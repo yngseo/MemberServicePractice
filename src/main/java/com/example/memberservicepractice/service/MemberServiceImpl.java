@@ -2,8 +2,10 @@ package com.example.memberservicepractice.service;
 
 import com.example.memberservicepractice.dto.MemberDto;
 import com.example.memberservicepractice.mapper.MemberMapper;
+import com.example.memberservicepractice.security.UserDetailsImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -16,7 +18,7 @@ import java.util.Date;
 import java.util.List;
 
 @Service
-public class MemberServiceImpl implements MemberService, UserDetailsService {
+public class MemberServiceImpl implements MemberService {
 
     @Autowired
     MemberMapper memberMapper;
@@ -31,15 +33,6 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
 
     public List<MemberDto> getListByClient(String name) {
         return memberMapper.getListByClient(name);
-    }
-
-    @Override
-    public UserDetails loadUserByUsername(String id) throws UsernameNotFoundException {
-        MemberDto memberDto = memberMapper.getMemberById(id);
-        if (memberDto == null) {
-            throw new UsernameNotFoundException("User not authorized.");
-        }
-        return memberDto;
     }
 
     public int updateMemberAccountState(String id) {
@@ -84,7 +77,9 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
     }
 
     public MemberDto getLoginMember(Authentication authentication) { //로그인된 회원 조회
-        return authentication != null ? (MemberDto) authentication.getPrincipal() : null;
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        MemberDto member = userDetails.getMember();
+        return authentication != null ? member : null;
     }
 
     public List<String> getClientList() {

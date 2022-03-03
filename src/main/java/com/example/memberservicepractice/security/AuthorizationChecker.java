@@ -8,14 +8,15 @@ import org.springframework.stereotype.Component;
 public class AuthorizationChecker {
 
     public String check(Authentication authentication) {
-        MemberDto memberDto = (MemberDto) authentication.getPrincipal();
-        if (!(memberDto instanceof MemberDto)) {
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        if (!(userDetails.getMember() instanceof MemberDto)) {
             return null;
         }
-        if (memberDto.getPasswordState()=='I') {
+        if (userDetails.getMember().getPasswordState() == 'I') {
             return null;
         }
-    return memberDto.getUserRole().substring(5);
+        System.out.println(userDetails.getAuthorities());
+    return userDetails.getMember().getUserRole().substring(5);
     }
 
 }

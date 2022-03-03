@@ -27,7 +27,7 @@ import java.io.IOException;
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    MemberServiceImpl memberService;
+    UserDetailsServiceImpl userDetailsService;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -52,9 +52,9 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                             @Override
                             public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
                                 clearAuthenticationAttributes(request); // 로그인 실패 이력 세션에서 제거
-                                MemberDto memberDto = (MemberDto) authentication.getPrincipal();
-                                if (memberDto.getPasswordState() == 'I') {
-                                    response.sendRedirect("/password/" + memberDto.getId());
+                                UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+                                if (userDetails.getMember().getPasswordState() == 'I') {
+                                    response.sendRedirect("/password/" + userDetails.getUsername());
                                 } else {
                                     response.sendRedirect("/main");
                                 }
@@ -104,7 +104,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
      */
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(memberService).passwordEncoder(new BCryptPasswordEncoder());
+        auth.userDetailsService(userDetailsService).passwordEncoder(new BCryptPasswordEncoder());
     }
 
 }

@@ -1,6 +1,7 @@
 package com.example.memberservicepractice.controller;
 
 import com.example.memberservicepractice.dto.MemberDto;
+import com.example.memberservicepractice.security.UserDetailsServiceImpl;
 import com.example.memberservicepractice.security.ValidationGroups;
 import com.example.memberservicepractice.service.MemberService;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -20,6 +21,8 @@ public class MemberController {
 
     @Autowired
     MemberService memberService;
+    @Autowired
+    UserDetailsServiceImpl userDetailService;
 
     @RequestMapping(value = {"/login"}, method = {RequestMethod.GET, RequestMethod.POST})
     public String login(Model model) {
@@ -68,7 +71,7 @@ public class MemberController {
     public String get(@PathVariable("id") String id, Model model, Authentication authentication) {
         MemberDto memberDto = memberService.getLoginMember(authentication);
         model.addAttribute("level", memberDto.getLevelSeq());
-        model.addAttribute("member", memberService.loadUserByUsername(id));
+        model.addAttribute("member", userDetailService.loadUserByUsername(id));
         return "member/get";
     }
 

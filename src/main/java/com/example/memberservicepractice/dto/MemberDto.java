@@ -18,7 +18,7 @@ import java.util.Collections;
 import java.util.Date;
 
 @Data
-public class MemberDto implements UserDetails {
+public class MemberDto {
 
     private Integer seq;
     @NotEmpty(message = "필수 입력 정보입니다.")
@@ -58,41 +58,5 @@ public class MemberDto implements UserDetails {
     private String userRole;
 
     private LevelDto levelDto;
-
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singletonList(new SimpleGrantedAuthority(this.userRole)); // list 오류 원인 예상
-    }
-
-    // 시큐리티의 userName
-    // -> 인증할 때 id를 봄
-    @Override
-    public String getUsername() {
-        return this.id;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    } // 계정 만료 여부
-
-    @Override
-    public boolean isAccountNonLocked() {
-        if (approvalDate == null) {
-            return false;
-        }
-        return true;
-    } // 계정 잠금 여부
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }  // 계정 비밀번호 만료 여부
-
-    @Override
-    public boolean isEnabled() {
-        return true;
-    } // 계정 사용 가능 여부
 
 }
