@@ -87,9 +87,6 @@ public class MemberDto implements UserDetails {
 
     @Override
     public boolean isCredentialsNonExpired() {
-        if (passwordState.equals('I')) {
-            return false;
-        }
         return true;
     }  // 계정 비밀번호 만료 여부
 

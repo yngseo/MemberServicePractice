@@ -26,8 +26,26 @@
         비밀번호 : <span th:if="${member.approvalDate == null}">승인 대기 중</span>
         <span th:if="${level.equals(1)} and ${member.approvalDate != null}"><button class="btn btn-primary password-btn"
                                                                  type="button">초기화</button></span>
-        <span th:if="${level.equals(3)} and ${member.approvalDate != null}">사용 가능</span>
-        <br>
+        <span th:if="${level.equals(3)} and ${member.approvalDate != null}">사용 가능</span><br>
+        <hr>
+        <div th:if="${member.levelSeq == 3}">
+            대표자 : <span th:text="${member.ceo}"></span>
+        </div>
+        <div th:if="${member.levelSeq == 4}">
+            소속회사 : <span th:text="${member.client}"></span>
+        </div>
+        <div th:if="${member.levelSeq == 2} or ${member.levelSeq == 4}">
+            부서 : <span th:text="${member.department}"></span>
+        </div>
+        <div th:if="${member.levelSeq == 2} or ${member.levelSeq == 4}">
+            직급 : <span th:text="${member.jobGrade}"></span>
+        </div>
+        <div>
+            연락처 : <span th:text="${member.phone}"></span>
+        </div>
+        <div>
+            비고 : <span th:text="${member.remark}"></span>
+        </div>
     </div>
 </main>
 <script>

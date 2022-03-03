@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>layout</title>
+
+    <!-- config fragment 사용 -->
+    <th:block th:replace="fragments/config :: configFragment" ></th:block>
+</head>
+
+<body>
+<div class="wrapper">
+    <!--사이드 바-->
+    <nav>
+        <ul class="menu-logo">
+            <li class="menu-logo-item"><a href="/main"><img src="/image/cmt_eyes_logo.svg" alt="로고 이미지"></a></li>
+        </ul>
+        <hr class="menu-hr">
+        <ul class="menu-dashboard">
+            <li><a href="/main"><span><i class="bi bi-speedometer2"></i>대시보드</span></a></li>
+        </ul>
+        <hr class="menu-hr">
+        <ul class="menu-member menu-dropdown"  th:if="${level.equals('ROLE_ADMIN')} or ${level.equals('ROLE_CLIENT')}">
+            <li><span><i class="bi bi-person-lines-fill"></i>계정 관리<i class="bi bi-chevron-down i-drop"></i></span>
+                <ul class="menu-items">
+                    <li><a href="/list"><span>계정 목록</span></a></li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
+    <div class="content-container">
+        <!--상단 바 -->
+        <header>
+            <div th:text="${info}"></div>
+            <div><a href="/logout">로그아웃</a><a href="/myInfo">마이페이지</a></div>
+        </header>
+        <main layout:fragment="content">
+            공통 레이아웃
+        </main>
+        <footer>
+            푸터
+        </footer>
+    </div>
+</div>
+</body>
+</html>

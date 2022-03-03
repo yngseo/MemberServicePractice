@@ -1,5 +1,6 @@
 package com.example.memberservicepractice.security;
 
+import com.example.memberservicepractice.dto.MemberDto;
 import com.example.memberservicepractice.service.MemberServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -8,13 +9,17 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.WebAttributes;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 @Configuration
@@ -28,10 +33,11 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers( "/login", "/fail", "/password", "/resources/**").permitAll() // 로그인 권한은 누구나, resources파일도 모든권한
+                .antMatchers("/login", "/resources/**").permitAll() // 로그인 권한은 누구나, resources파일도 모든권한
                 // 접근 허용
-                .antMatchers("/main").hasAnyRole("ADMIN","EMP","CLIENT","CLIENTEMP")
+                .antMatchers("/password").hasAnyRole("ADMIN","EMP","CLIENT","CLIENTEMP")
                 .antMatchers("/list", "/create").hasAnyRole("ADMIN","CLIENT")
+                .antMatchers("/main").access("hasRole("+"@authorizationChecker.check(authentication)"+")") // 비밀번호 상태가 'I'일 시 접근 제한
                 .and()
                 .csrf().disable()
                 .headers().frameOptions().disable()
@@ -41,6 +47,26 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 /*.loginProcessingUrl("/login_proc")*/
                 .defaultSuccessUrl("/main")
                 /*.failureUrl("/login?error=true")*/ // 인증에 실패했을 때 보여주는 화면 url, 로그인 form으로 파라미터값 error=true로 보낸다.
+                .successHandler(
+                        new AuthenticationSuccessHandler() {
+                            @Override
+                            public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+                                clearAuthenticationAttributes(request); // 로그인 실패 이력 세션에서 제거
+                                MemberDto memberDto = (MemberDto) authentication.getPrincipal();
+                                if (memberDto.getPasswordState() == 'I') {
+                                    response.sendRedirect("/password/" + memberDto.getId());
+                                } else {
+                                    response.sendRedirect("/main");
+                                }
+                            }
+                            private void clearAuthenticationAttributes(HttpServletRequest request) {
+                                HttpSession session = request.getSession(false);
+                                if(session != null) {
+                                    session.removeAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
+                                }
+                            }
+                        }
+                )
                 .failureHandler(
                         new AuthenticationFailureHandler() {
                             @Override
@@ -57,10 +83,10 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                                     errorMsg = "계정 승인 처리 중입니다. 승인 후 로그인이 가능합니다.";
                                     request.setAttribute("errorMsg", errorMsg);
                                     request.getRequestDispatcher("/login?error=true").forward(request, response);
-                                } else if(exception instanceof CredentialsExpiredException) {
+                                } /*else if(exception instanceof CredentialsExpiredException) {
                                     response.sendRedirect("/password/"+id);
                                     System.out.println("비밀번호 오류");
-                                }
+                                }*/
                             }
                         }
                 )

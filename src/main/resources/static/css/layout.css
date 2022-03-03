@@ -1,0 +1,68 @@
+html {
+    font-family: 'Nanum Gothic', sans-serif;
+}
+
+.wrapper {
+    display: flex;
+}
+
+nav {
+    width: 14rem;
+    background-color: #e3e3e3;
+}
+
+nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 1.5rem 1rem;
+    cursor: pointer;
+}
+
+nav ul ul {
+    display: none;
+}
+
+nav a, a:hover {
+    text-decoration: none;
+    color: inherit;
+}
+
+nav i {
+    margin-right: 0.25rem;
+}
+
+.i-drop {
+    float: right;
+}
+
+.menu-logo-item img {
+    width: 100%;
+}
+
+.menu-hr {
+    margin: 0 1rem;
+}
+
+.content-container{
+    width: 100%;
+}
+
+header {
+    width: 100%;
+    height: 4.375rem;
+    background-color: #d2d2d2;
+}
+
+main {
+    height: 100vh;
+}
+
+footer {
+    width: 100%;
+    height: 4.375rem;
+    background-color: #d2d2d2;
+}
+
+.show {
+    display: block;
+}

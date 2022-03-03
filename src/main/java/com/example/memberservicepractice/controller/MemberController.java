@@ -46,6 +46,7 @@ public class MemberController {
     public String myInfoForm(Model model, Authentication authentication) {
         MemberDto memberDto = memberService.getLoginMember(authentication);
         model.addAttribute("info", memberDto);
+        model.addAttribute("level", memberDto.getUserRole());
         return "myInfo";
     }
 
