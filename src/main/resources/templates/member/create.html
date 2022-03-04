@@ -19,7 +19,7 @@
                 <div class="field-wrapper">
                     <div class="form-group">
                         <label class="custom-label" th:for="applicant">신청자</label>
-                        <span class="login-info" th:data-levelSeq="${info.levelSeq}" name="applicant" th:text="${info.id}"></span>
+                        <span class="login-id" name="applicant" th:text="${info.id}" th:data-levelSeq="${info.levelSeq}"></span>
                         <input type="hidden" name="applicant" th:value="${info.id}">
                     </div>
                     <div class="form-group" th:if="${info.levelSeq == 1}">
@@ -66,7 +66,7 @@
                     <h2>세부 정보</h2>
                 </div>
                 <div class="field-wrapper">
-                    <div class="form-group ceo-field" th:if="${member.levelSeq == 3}">
+                    <div class="form-group ceo-field" th:if="${info.levelSeq == 1}">
                         <label th:for="ceo">대표자</label>
                         <input type="text" class="form-control" name="ceo" placeholder="대표자를 입력해주세요">
                     </div>

@@ -18,7 +18,7 @@
             <div class="field-wrapper">
                 <div class="form-group">
                     <label class="custom-label" th:for="id">ID</label>
-                    <span th:text="${member.id}"></span>
+                    <span class="id" th:text="${member.id}"></span>
                     <span th:if="${info.levelSeq == 1} and ${member.approvalDate == null}">
                         <button class="btn btn-primary approval-btn" type="button">승인</button></span>
                 </div>

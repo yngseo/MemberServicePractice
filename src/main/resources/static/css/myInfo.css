@@ -1,7 +1,3 @@
-.error-message {
-    color: red;
-}
-
 .container {
     height: 100%;
     padding: 50px;
@@ -19,10 +15,6 @@
     width: 80%;
 }
 
-.id-field {
-    display: flex;
-}
-
 h1, h2, label {
     font-weight: bold;
 }
@@ -31,10 +23,11 @@ h1, h2, label {
     padding-right: 20px;
 }
 
-#check-btn {
-    width: 130px;
+.approval-btn {
+    margin-left: 10px;
 }
 
-#submit-btn {
-    float: right;
+.modify-pw-btn a {
+    color: white;
+    text-decoration: none;
 }

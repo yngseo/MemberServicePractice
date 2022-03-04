@@ -1,6 +1,6 @@
 $(document).ready(function () {
 
-    let levelSeq = $(".login-info").attr("data-levelSeq");
+    let levelSeq = $(".login-id").attr("data-levelSeq");
 
     $(".ceo-field").css("display", "none");
     if (levelSeq == 1) {
@@ -15,7 +15,7 @@ $(document).ready(function () {
 
     // 라디오버튼 클릭시 이벤트 발생
     $("input:radio[name=levelSeq]").click(function () {
-        cleanField();
+        cleanField(); // 익명 함수
         if ($("input[name=levelSeq]:checked").val() == "2") {
             $(".ceo-field").css("display", "none");
             $(".client-field").css("display", "none");
@@ -24,8 +24,8 @@ $(document).ready(function () {
         } else if ($("input[name=levelSeq]:checked").val() == "3") {
             $(".ceo-field").css("display", "block");
             $(".client-field").css("display", "none");
-            $(".department-field").css("display", "block");
-            $(".jobGrade-field").css("display", "block");
+            $(".department-field").css("display", "none");
+            $(".jobGrade-field").css("display", "none");
         } else if ($("input[name=levelSeq]:checked").val() == "4") {
             $(".ceo-field").css("display", "none");
             $(".client-field").css("display", "block");
@@ -33,7 +33,7 @@ $(document).ready(function () {
             $(".jobGrade-field").css("display", "block");
         }
     })
-}); // 다른 방법 필요
+});
 
 //id check
 $("#check-btn").click(function () {
@@ -89,15 +89,9 @@ function checkId () {
 }
 
 // Radio 변경 시 필드 초기화
-function cleanField () {
+function cleanField() {  // 익명 함수
     $("input[name=ceo]").val("");
     $("select[name=client]").val("").prop("selected", true);
     $("input[name=department]").val("");
     $("input[name=jobGrade]").val("");
 }
-/*    function checkIdReg (value) {
-        if (!idReg.test(value)) {
-            $(".id-form p").remove();
-            $(".id-form").append("<p class='error-msg' style='color: red'>영문자로 시작하는 영문자 또는 숫자 6~20자여야 합니다</p>");
-        }
-    }*/

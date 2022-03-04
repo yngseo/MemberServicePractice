@@ -1,14 +1,10 @@
 package com.example.memberservicepractice.service;
 
 import com.example.memberservicepractice.dto.MemberDto;
-import com.example.memberservicepractice.mapper.MemberMapper;
+import com.example.memberservicepractice.repository.MemberRepository;
 import com.example.memberservicepractice.security.UserDetailsImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,59 +17,59 @@ import java.util.List;
 public class MemberServiceImpl implements MemberService {
 
     @Autowired
-    MemberMapper memberMapper;
+    MemberRepository memberRepository;
 
     @Override
     public List<MemberDto> getListByAdmin() {
-        return memberMapper.getListByAdmin();
+        return memberRepository.getListByAdmin();
     }
 
     @Override
     public List<MemberDto> getListByAdmin(Integer levelSeq) {
-        return memberMapper.getListByAdmin(levelSeq);
+        return memberRepository.getListByAdmin(levelSeq);
     }
 
     @Override
     public List<MemberDto> getListByClient(String name) {
-        return memberMapper.getListByClient(name);
+        return memberRepository.getListByClient(name);
     }
 
     @Override
     public MemberDto getMemberById(String id) {
-        return memberMapper.getMemberById(id);
+        return memberRepository.getMemberById(id);
     }
 
     @Override
     public int updateMemberAccountState(String id) {
-        return memberMapper.updateMemberAccountState(id);
+        return memberRepository.updateMemberAccountState(id);
     }
 
     @Override
     public int updateMemberPasswordState(String id) {
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(); // bean 설정
         String randomPw = getRamdomPassword(10); // 난수 처리
         System.out.println("비밀번호 : " + randomPw);
         String password = passwordEncoder.encode(randomPw);
-        return memberMapper.updateMemberPasswordState(password, id);
+        return memberRepository.updateMemberPasswordState(password, id);
     }
 
     @Override
     public int updatePassword(String currentPw, String password, String id) {
-        MemberDto memberDto = memberMapper.getMemberById(id);
+        MemberDto memberDto = memberRepository.getMemberById(id); // 기능 분리
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         if (passwordEncoder.matches(currentPw, memberDto.getPassword())) {
-            return memberMapper.updatePassword(passwordEncoder.encode(password), id);
+            return memberRepository.updatePassword(passwordEncoder.encode(password), id);
         }
-        return 0;
+        return 0; // boolean
     }
 
     @Override
     public int checkId(String id) {
-        return memberMapper.checkId(id);
+        return memberRepository.checkId(id);
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class) // commit, rollback 자동 수행 (특정 예외 발생 시 rollback)
+   /* @Transactional(rollbackFor = Exception.class)*/ // commit, rollback 자동 수행 (특정 예외 발생 시 rollback)
     public void insertMember(MemberDto memberDto) {
         String password = getRamdomPassword(10); // 난수 처리
         System.out.println("비밀번호 : " + password);
@@ -86,7 +82,7 @@ public class MemberServiceImpl implements MemberService {
         } else if (memberDto.getLevelSeq() == 4) {
             memberDto.setUserRole("ROLE_CLIENTEMP");
         }
-        memberMapper.insertMember(memberDto);
+        memberRepository.insertMember(memberDto);
     }
 
     @Override
@@ -98,7 +94,7 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public List<String> getClientList() {
-        return memberMapper.getClientList();
+        return memberRepository.getClientList();
     }
 
     

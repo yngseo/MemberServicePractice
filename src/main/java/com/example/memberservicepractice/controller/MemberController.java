@@ -55,7 +55,7 @@ public class MemberController {
     public String updatePassword(Model model, @PathVariable("id") String id, @RequestParam("currentPw") String currentPw, @RequestParam("password") String password, @Validated(ValidationGroups.password.class) @ModelAttribute("member") MemberDto memberDto, BindingResult bindingResult) {
         /*memberDto = memberService.getLoginMember(authentication);
         String id = memberDto.getId();*/
-        if (memberService.updatePassword(currentPw, password, id) == 0) {
+        if (memberService.updatePassword(currentPw, password, id) == 0) { // 수정 필요
             model.addAttribute("message","비밀번호가 일치하지 않습니다.");
             return "password";
         } else if (bindingResult.hasErrors()) {
@@ -111,7 +111,7 @@ public class MemberController {
     // 계정 생성 페이지
     @GetMapping("/create")
     public String createForm(Model model, Authentication authentication, @ModelAttribute("member") MemberDto memberDto) {
-        memberDto = memberService.getLoginMember(authentication);
+        memberDto = memberService.getLoginMember(authentication); // 줄이기
         model.addAttribute("info", memberDto);
         model.addAttribute("client", memberService.getClientList());
         return "member/create";
@@ -128,7 +128,6 @@ public class MemberController {
     @PostMapping("/create")
     public String create(@ModelAttribute("member") @Valid MemberDto memberDto, BindingResult bindingResult, Model model, Authentication authentication) {
         if (bindingResult.hasErrors()) {
-            System.out.println("에러 : " + bindingResult.getFieldErrors());
             memberDto = memberService.getLoginMember(authentication);
             model.addAttribute("info", memberDto);      //유저 아이디
             model.addAttribute("client", memberService.getClientList());

@@ -15,7 +15,6 @@ public class AuthorizationChecker {
         if (userDetails.getMember().getPasswordState() == 'I') {
             return null;
         }
-        System.out.println(userDetails.getAuthorities());
     return userDetails.getMember().getUserRole().substring(5);
     }
 

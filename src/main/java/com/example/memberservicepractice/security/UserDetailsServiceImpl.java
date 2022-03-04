@@ -1,7 +1,7 @@
 package com.example.memberservicepractice.security;
 
 import com.example.memberservicepractice.dto.MemberDto;
-import com.example.memberservicepractice.mapper.MemberMapper;
+import com.example.memberservicepractice.repository.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired
-    MemberMapper memberMapper;
+    MemberRepository memberMapper;
 
 /*    @Override
     public UserDetails loadUserByUsername(String id) throws UsernameNotFoundException {

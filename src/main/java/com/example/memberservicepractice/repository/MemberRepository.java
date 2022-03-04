@@ -1,13 +1,12 @@
-package com.example.memberservicepractice.mapper;
+package com.example.memberservicepractice.repository;
 
 import com.example.memberservicepractice.dto.MemberDto;
 import org.apache.ibatis.annotations.Mapper;
-import org.springframework.security.core.Authentication;
 
 import java.util.List;
 
 @Mapper
-public interface MemberMapper {
+public interface MemberRepository {
 
     public List<MemberDto> getListByAdmin();
 

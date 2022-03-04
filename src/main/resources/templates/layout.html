@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="UTF-8" />
-    <title>layout</title>
+    <title>CMT Eyes</title>
 
     <!-- config fragment 사용 -->
     <th:block th:replace="fragments/config :: configFragment" ></th:block>
@@ -31,16 +31,23 @@
         </ul>
     </nav>
     <div class="content-container">
-        <!--상단 바 -->
         <header>
-            <div><span th:text="${info.id}"></span>의 <span th:text="${info.name}"></span>님</div>
-            <div><a href="/logout">로그아웃</a><a href="/myInfo">마이페이지</a></div>
+            <!--상단 바-->
+            <div class="login-info">
+                <span  th:text="${info.id}"></span>의 <span th:text="${info.name}"></span>님</section>
+            </div>
+            <div class="member-nav">
+                <ul>
+                    <li class="member-nav-item"><a href="/myInfo">마이페이지</a></li>
+                    <li class="member-nav-item"><a href="/logout">로그아웃</a></li>
+                </ul>
+            </div>
         </header>
         <main layout:fragment="content">
-            공통 레이아웃
+            <!--공통 레이아웃-->
         </main>
         <footer>
-            푸터
+            <!--푸터-->
         </footer>
     </div>
 </div>
