@@ -1,0 +1,40 @@
+.error-message {
+    color: red;
+}
+
+.container {
+    height: 100%;
+    padding: 50px;
+}
+
+.info-section {
+    display: flex;
+}
+
+.title-wrapper {
+    width: 20%;
+}
+
+.field-wrapper {
+    width: 80%;
+}
+
+.id-field {
+    display: flex;
+}
+
+h2, label {
+    font-weight: bold;
+}
+
+.custom-label {
+    padding-right: 20px;
+}
+
+#check-btn {
+    width: 130px;
+}
+
+#submit-btn {
+    float: right;
+}

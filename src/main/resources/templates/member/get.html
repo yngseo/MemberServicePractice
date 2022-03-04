@@ -1,98 +1,83 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
-<head>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css"
-          integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
-            integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
-            crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-fQybjgWLrvvRgtW6bFlB7jaZrFsaBXjsOMm/tB9LTS58ONXgqbR9W8oWht/amnpF"
-            crossorigin="anonymous"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-</head>
-<body>
-<main>
+<html xmlns:th="http://www.thymeleaf.org" lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+
+<th:block layout:fragment="css">
+    <link rel="stylesheet" th:href="@{/css/member/get.css}"/>
+</th:block>
+<th:block layout:fragment="script">
+    <script defer th:src="@{/js/member/get.js}" type="text/javascript" charset="utf-8"></script>
+</th:block>
+<main layout:fragment="content">
     <div class="container">
-        ID : <span class="id" th:text="${member.id}"></span>
-        <span th:if="${level.equals(1)} and ${member.approvalDate == null}"><button class="btn btn-primary approval-btn"
-                                                             type="button">승인</button></span><br>
-        회사명 : <span th:if="${member.levelSeq == 2}">CMT정보통신</span>
-                <span th:if="${member.levelSeq == 3}" th:text="${member.name}"></span>
-                <span th:if="${member.levelSeq == 4}" th:text="${member.client}"></span><br>
-        이름 : <span th:text="${member.name}"></span><br>
-        이메일 : <span th:text="${member.email}"></span><br>
-        비밀번호 : <span th:if="${member.approvalDate == null}">승인 대기 중</span>
-        <span th:if="${level.equals(1)} and ${member.approvalDate != null}"><button class="btn btn-primary password-btn"
-                                                                 type="button">초기화</button></span>
-        <span th:if="${level.equals(3)} and ${member.approvalDate != null}">사용 가능</span><br>
+        <div class="info-section">
+            <div class="title-wrapper">
+                <h2>기본 정보</h2>
+            </div>
+            <div class="field-wrapper">
+                <div class="form-group">
+                    <label class="custom-label" th:for="id">ID</label>
+                    <span th:text="${member.id}"></span>
+                    <span th:if="${info.levelSeq == 1} and ${member.approvalDate == null}">
+                        <button class="btn btn-primary approval-btn" type="button">승인</button></span>
+                </div>
+                <div class="form-group">
+                    <label class="custom-label">회사명</label>
+                    <span th:if="${member.levelSeq == 2}">CMT정보통신</span>
+                    <span th:if="${member.levelSeq == 3}" th:text="${member.name}"></span>
+                    <span th:if="${member.levelSeq == 4}" th:text="${member.client}"></span>
+                </div>
+                <div class="form-group">
+                    <label class="custom-label" th:for="name">이름</label>
+                    <span th:text="${member.name}"></span>
+                </div>
+                <div class="form-group">
+                    <label class="custom-label" th:for="email">이메일</label>
+                    <span th:text="${member.email}"></span>
+                </div>
+                <div class="form-group">
+                    <label class="custom-label" th:for="password">비밀번호</label>
+                    <span th:if="${member.approvalDate == null}">승인 대기 중</span>
+                    <span th:if="${info.levelSeq == 1} and ${member.approvalDate != null}"><button class="btn btn-primary password-btn"
+                                                                                                   type="button">초기화</button></span>
+                    <span th:if="${info.levelSeq == 3} and ${member.approvalDate != null}">사용 가능</span>
+                </div>
+            </div>
+        </div>
         <hr>
-        <div th:if="${member.levelSeq == 3}">
-            대표자 : <span th:text="${member.ceo}"></span>
+        <div class="info-section">
+            <div class="title-wrapper">
+                <h2>세부 정보</h2>
+            </div>
+            <div class="field-wrapper">
+                <div class="form-group" th:if="${member.levelSeq == 3}">
+                    <label class="custom-label" th:for="ceo">대표자</label>
+                    <span th:text="${member.ceo}"></span>
+                </div>
+                <div class="form-group" th:if="${member.levelSeq == 4}">
+                    <label class="custom-label" th:for="client">소속회사</label>
+                    <span th:text="${member.client}"></span>
+                </div>
+                <div class="form-group" th:if="${member.levelSeq == 2} or ${member.levelSeq == 4}">
+                    <label class="custom-label" th:for="department">부서</label>
+                    <span th:text="${member.department}"></span>
+                </div>
+                <div class="form-group" th:if="${member.levelSeq == 2} or ${member.levelSeq == 4}">
+                    <label class="custom-label" th:for="jobGrade">직급</label>
+                    <span th:text="${member.jobGrade}"></span>
+                </div>
+                <div class="form-group">
+                    <label class="custom-label" th:for="phone">연락처</label>
+                    <span th:text="${member.phone}"></span>
+                </div>
+                <div class="form-group">
+                    <label class="custom-label" th:for="remark">비고</label>
+                    <span th:text="${member.remark}"></span>
+                </div>
+            </div>
         </div>
-        <div th:if="${member.levelSeq == 4}">
-            소속회사 : <span th:text="${member.client}"></span>
-        </div>
-        <div th:if="${member.levelSeq == 2} or ${member.levelSeq == 4}">
-            부서 : <span th:text="${member.department}"></span>
-        </div>
-        <div th:if="${member.levelSeq == 2} or ${member.levelSeq == 4}">
-            직급 : <span th:text="${member.jobGrade}"></span>
-        </div>
-        <div>
-            연락처 : <span th:text="${member.phone}"></span>
-        </div>
-        <div>
-            비고 : <span th:text="${member.remark}"></span>
-        </div>
+        <button type="button" class="btn btn-primary list-btn"><a href="/list">목록</a></button>
     </div>
 </main>
-<script>
-    $(".approval-btn").click(function () {
-        if (confirm("해당 계정 사용을 승인 하시겠습니까?") == true) {
-            $.ajax({
-                url: "/approval",
-                type: "PUT",
-                data: {id: $(".id").text()},
-                dataType: "json",
-                success: function (data) {
-                    console.log(data);
-                    if (data == 1) {
-                        alert("승인 되었습니다.");
-                        location.href="/list";
-                    } else {
-                        alert("ERROR");
-                        return false;
-                    }
-                }
-            });
-        } else {
-            return false;
-        }
-    });
-
-    $(".password-btn").click(function () {
-        if (confirm("해당 계정 비밀번호를 초기화 하시겠습니까?") == true) {
-            $.ajax({
-                url: "/initialize",
-                type: "PUT",
-                data: {id: $(".id").text()},
-                dataType: "json",
-                success: function (data) {
-                    if (data == 1) {
-                        alert("초기화 되었습니다.");
-                        location.href="/list";
-                    } else {
-                        alert("ERROR");
-                        return false;
-                    }
-                }
-            });
-        } else {
-            return false;
-        }
-    });
-</script>
-</body>
 </html>

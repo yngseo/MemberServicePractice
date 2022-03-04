@@ -1,0 +1,37 @@
+.container {
+    height: 100%;
+    padding: 50px;
+}
+
+.info-section {
+    display: flex;
+}
+
+.title-wrapper {
+    width: 20%;
+}
+
+.field-wrapper {
+    width: 80%;
+}
+
+h2, label {
+    font-weight: bold;
+}
+
+.custom-label {
+    padding-right: 20px;
+}
+
+.approval-btn {
+    margin-left: 10px;
+}
+
+.list-btn {
+    float: right;
+}
+
+.list-btn a {
+    color: white;
+    text-decoration: none;
+}

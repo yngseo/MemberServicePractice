@@ -16,7 +16,6 @@
 
 //layout
 $(".menu-dropdown").click(function() {
-    console.log("load");
     $(".menu-items").toggleClass('show');
     $(".bi-chevron-down").toggleClass('bi-chevron-up');
 });

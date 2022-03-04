@@ -1,0 +1,27 @@
+.container {
+    height: 100%;
+    padding: 50px;
+}
+
+.member-filter {
+    width: 300px;
+    padding: 10px;
+    margin: 0;
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+}
+
+.member-filter li{
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.create-btn {
+    float: right;
+}
+
+.create-btn a {
+    color: white;
+    text-decoration: none;
+}
