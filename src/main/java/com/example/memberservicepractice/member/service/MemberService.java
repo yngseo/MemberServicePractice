@@ -1,14 +1,16 @@
-package com.example.memberservicepractice.service;
+package com.example.memberservicepractice.member.service;
 
-import com.example.memberservicepractice.dto.MemberDto;
+import com.example.memberservicepractice.common.Pagination.Criteria;
+import com.example.memberservicepractice.member.dto.MemberDto;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.List;
 
 public interface MemberService {
 
-    public List<MemberDto> getListByAdmin(); // 관리자 계정 전체 조회
+    public int getTotal(Criteria criteria);
+
+    public List<MemberDto> getListByAdmin(Criteria criteria); // 관리자 계정 전체 조회
 
     public List<MemberDto> getListByAdmin(Integer levelSeq); // 관리자 계정 전체 필터 조회
 

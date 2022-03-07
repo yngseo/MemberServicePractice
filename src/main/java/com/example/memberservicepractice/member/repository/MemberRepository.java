@@ -1,6 +1,7 @@
-package com.example.memberservicepractice.repository;
+package com.example.memberservicepractice.member.repository;
 
-import com.example.memberservicepractice.dto.MemberDto;
+import com.example.memberservicepractice.common.Pagination.Criteria;
+import com.example.memberservicepractice.member.dto.MemberDto;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -8,7 +9,9 @@ import java.util.List;
 @Mapper
 public interface MemberRepository {
 
-    public List<MemberDto> getListByAdmin();
+    public int getTotal(Criteria criteria);
+
+    public List<MemberDto> getListByAdmin(Criteria criteria);
 
     public List<MemberDto> getListByAdmin(Integer levelSeq);
 

@@ -1,9 +1,11 @@
-package com.example.memberservicepractice.controller;
+package com.example.memberservicepractice.member.controller;
 
-import com.example.memberservicepractice.dto.MemberDto;
-import com.example.memberservicepractice.security.UserDetailsServiceImpl;
-import com.example.memberservicepractice.security.ValidationGroups;
-import com.example.memberservicepractice.service.MemberService;
+import com.example.memberservicepractice.common.Pagination.Criteria;
+import com.example.memberservicepractice.common.Pagination.PageDto;
+import com.example.memberservicepractice.member.dto.MemberDto;
+import com.example.memberservicepractice.member.security.UserDetailsServiceImpl;
+import com.example.memberservicepractice.member.service.MemberService;
+import com.example.memberservicepractice.member.security.ValidationGroups;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -66,20 +68,21 @@ public class MemberController {
     }
 
     // 계정 조회 페이지
-    @GetMapping("/list")
-    public String memberList (Model model, Authentication authentication) {
+    @GetMapping("list")
+    public String memberList (Model model, Authentication authentication, @ModelAttribute("criteria") Criteria criteria) {
         MemberDto memberDto = memberService.getLoginMember(authentication);
         model.addAttribute("info", memberDto);
         String name = memberDto.getName();
         if (memberDto.getLevelSeq() == 1) {
-            model.addAttribute("list", memberService.getListByAdmin());
+            model.addAttribute("list", memberService.getListByAdmin(criteria));
+            model.addAttribute("pageMaker", new PageDto(memberService.getTotal(criteria), 10, criteria));
         } else if (memberDto.getLevelSeq() == 3) {
             model.addAttribute("list", memberService.getListByClient(name));
         }
         return "member/list";
     }
 
-    @GetMapping("/list/{id}")
+    @GetMapping("/get/{id}")
     public String get(@PathVariable("id") String id, Model model, Authentication authentication) {
         MemberDto memberDto = memberService.getLoginMember(authentication);
         model.addAttribute("info", memberDto);

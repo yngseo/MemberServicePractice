@@ -12,12 +12,28 @@
 <main layout:fragment="content">
     <div class="container">
         <h1>계정 목록</h1>
-        <ul class="member-filter" th:if="${info.levelSeq == 1}">
+        <div class="input-group mb-3 search-field">
+            <form action="/list" class="search-form" th:object="${criteria}">
+                <select class="custom-select search-select" name="type">
+                    <option value="" selected>선택</option>
+                    <option value="I">아이디</option>
+                    <option value="N">이름</option>
+                    <option value="C">소속</option>
+                </select>
+                <input type="text" class="form-control keyword-input" name="keyword">
+                <input type="hidden" name="pageNum" th:field="*{pageNum}">
+                <input type="hidden" name="amount" th:field="*{amount}">
+                <div class="input-group-append">
+                    <button class="btn btn-outline-secondary search-button" type="button"><i class="bi bi-search"></i></button>
+                </div>
+            </form>
+        </div>
+<!--        <ul class="member-filter" th:if="${info.levelSeq == 1}">
             <li data-level="total">전체</li>
             <li data-level="2">직원</li>
             <li data-level="3">고객사</li>
             <li data-level="4">고객</li>
-        </ul>
+        </ul>-->
         <table class="table">
             <thead>
             <tr>
@@ -47,6 +63,28 @@
             </tr>
             </tbody>
         </table>
+        <nav aria-label="Page navigation example" th:object="${pageMaker}">
+            <ul class="pagination">
+                <li class="page-item">
+                    <a class="page-link" th:if="*{prev}" th:href="@{/list(pageNum=*{startPage - 1}, amount=${pageMaker.criteria.getAmount()})}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                <th:block th:each="num : ${#numbers.sequence(pageMaker.getStartPage(), pageMaker.getEndPage())}">
+                    <li class="page-item" th:if="${pageMaker.criteria.getPageNum() == num}"><a class="page-link" th:text="${num}"></a></li>
+                    <li class="page-item" th:unless="${pageMaker.criteria.getPageNum() == num}"><a class="page-link" th:text="${num}" th:with="url=${pageMaker.criteria.getListLink(num)}" th:href="@{${url}}"></a></li>
+                </th:block>
+                <li class="page-item">
+                    <a class="page-link" th:if="*{next}" th:href="@{/list(pageNum=*{endPage + 1}, amount=${pageMaker.criteria.getAmount()})}" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+<!--            <form action="/list" th:object="${criteria}" name="pageForm">
+                <input type="hidden" name="pageNum" th:field="*{pageNum}">
+                <input type="hidden" name="amount" th:field="*{amount}">
+            </form>-->
+        </nav>
         <button type="button" class="btn btn-primary create-btn"><a href="/create"> 계정 생성 요청</a></button>
     </div>
 </main>

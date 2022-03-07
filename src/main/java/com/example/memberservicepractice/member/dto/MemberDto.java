@@ -1,20 +1,15 @@
-package com.example.memberservicepractice.dto;
+package com.example.memberservicepractice.member.dto;
 
-import com.example.memberservicepractice.security.ValidationGroups;
+import com.example.memberservicepractice.member.security.ValidationGroups;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
 
 @Data

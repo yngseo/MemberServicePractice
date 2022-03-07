@@ -1,7 +1,7 @@
-package com.example.memberservicepractice.security;
+package com.example.memberservicepractice.member.security;
 
-import com.example.memberservicepractice.dto.MemberDto;
-import com.example.memberservicepractice.repository.MemberRepository;
+import com.example.memberservicepractice.member.dto.MemberDto;
+import com.example.memberservicepractice.member.repository.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

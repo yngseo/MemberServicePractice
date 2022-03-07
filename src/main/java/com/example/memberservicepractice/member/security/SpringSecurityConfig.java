@@ -1,7 +1,5 @@
-package com.example.memberservicepractice.security;
+package com.example.memberservicepractice.member.security;
 
-import com.example.memberservicepractice.dto.MemberDto;
-import com.example.memberservicepractice.service.MemberServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.*;
@@ -33,9 +31,9 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers("/login", "/resources/**").permitAll() // 로그인 권한은 누구나, resources파일도 모든권한
+                .antMatchers("/login", "/css/**", "/js/**", "/image/**").permitAll() // 로그인 권한은 누구나, resources파일도 모든권한
                 // 접근 허용
-                .antMatchers("/password/*").hasAnyRole("ADMIN","EMP","CLIENT","CLIENTEMP")
+                .antMatchers("/password/**").hasAnyRole("ADMIN","EMP","CLIENT","CLIENTEMP")
                 .antMatchers("/list", "/create").hasAnyRole("ADMIN","CLIENT") // 접근 제한 필요
                 .antMatchers("/main").access("hasRole("+"@authorizationChecker.check(authentication)"+")") // 비밀번호 상태가 'I'일 시 접근 제한
                 .anyRequest().authenticated()

@@ -21,6 +21,18 @@ h1 {
     font-weight: bold;
 }
 
+.search-field {
+    width: 400px;
+}
+
+.keyword-input {
+    width: 200px!important;
+}
+
+.bi-search {
+    color: white;
+}
+
 .create-btn {
     float: right;
 }

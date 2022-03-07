@@ -1,13 +1,13 @@
-package com.example.memberservicepractice.service;
+package com.example.memberservicepractice.member.service;
 
-import com.example.memberservicepractice.dto.MemberDto;
-import com.example.memberservicepractice.repository.MemberRepository;
-import com.example.memberservicepractice.security.UserDetailsImpl;
+import com.example.memberservicepractice.common.Pagination.Criteria;
+import com.example.memberservicepractice.member.dto.MemberDto;
+import com.example.memberservicepractice.member.security.UserDetailsImpl;
+import com.example.memberservicepractice.member.repository.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.security.SecureRandom;
 import java.util.Date;
@@ -20,8 +20,13 @@ public class MemberServiceImpl implements MemberService {
     MemberRepository memberRepository;
 
     @Override
-    public List<MemberDto> getListByAdmin() {
-        return memberRepository.getListByAdmin();
+    public int getTotal(Criteria criteria) {
+        return memberRepository.getTotal(criteria);
+    }
+
+    @Override
+    public List<MemberDto> getListByAdmin(Criteria criteria) {
+        return memberRepository.getListByAdmin(criteria);
     }
 
     @Override

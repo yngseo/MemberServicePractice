@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTO Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.example.memberservicepractice.repository.MemberRepository">
+<mapper namespace="com.example.memberservicepractice.member.repository.MemberRepository">
 
-    <resultMap type="com.example.memberservicepractice.dto.LevelDto" id="LevelDto">
+    <resultMap type="com.example.memberservicepractice.member.dto.LevelDto" id="LevelDto">
         <id column="seq" property="seq" />
         <result column="level_name" property="levelName" />
     </resultMap>
 
-    <resultMap type="com.example.memberservicepractice.dto.MemberDto" id="MemberDto">
+    <resultMap type="com.example.memberservicepractice.member.dto.MemberDto" id="MemberDto">
         <id column="seq" property="seq"/>
         <result column="id" property="id"/>
         <result column="name" property="name"/>
@@ -30,16 +30,49 @@
         <collection property="levelDto" resultMap="LevelDto"/>
     </resultMap>
 
-    <select id="getListByAdmin" resultMap="MemberDto">
-        SELECT M.*, L.LEVEL_NAME FROM MEMBER M JOIN MEMBER_LEVEL L ON M.LEVEL_SEQ = L.SEQ
+    <sql id="search">
+        <if test="type != null and keyword != null">
+            <trim prefix="(" suffix=") " prefixOverrides="OR">
+                <foreach item="type" collection="typeArr">
+                    <trim prefix="OR">
+                        <choose>
+                            <when test="type =='I'.toString()">
+                                ID LIKE '%' || #{keyword} || '%'
+                            </when>
+                            <when test="type =='N'.toString()">
+                                NAME LIKE '%' || #{keyword} || '%'
+                            </when>
+                            <when test="type =='C'.toString()">
+                                CLIENT LIKE '%' || #{keyword} || '%'
+                            </when>
+                        </choose>
+                    </trim>
+                </foreach>
+            </trim>
+        </if>
+    </sql>
+
+    <select id="getTotal" resultType="int">
+        SELECT COUNT(*)
+        FROM MEMBER
         <where>
-            <if test="levelSeq != null">
-                M.LEVEL_SEQ = #{levelSeq}
-            </if>
-            <if test="levelSeq == null">
-                L.SEQ != 1
-            </if>
+            <include refid="search"></include>
         </where>
+    </select>
+
+    <select id="getListByAdmin" resultMap="MemberDto">
+        SELECT M.*, L.LEVEL_NAME
+        FROM (
+            SELECT /*+ INDEX_DESC(MEMBER MEMBER_PK) */
+            ROWNUM R, SEQ, ID, PASSWORD, NAME, EMAIL, LEVEL_SEQ, APPLICANT, START_DATE, MODIFY_DATE, APPROVAL_DATE, ACCOUNT_STATE, PASSWORD_STATE, PHONE, REMARK, CEO, CLIENT, DEPARTMENT, JOB_GRADE, USER_ROLE
+            FROM MEMBER
+            <where>
+                <include refid="search"></include>
+                <![CDATA[     AND ROWNUM <= #{pageNum} * #{amount} ]]>
+            </where>
+        ) M
+        JOIN MEMBER_LEVEL L ON M.LEVEL_SEQ = L.SEQ
+        WHERE R > (#{pageNum}-1) * #{amount}
         ORDER BY M.SEQ DESC
     </select>
 
@@ -49,7 +82,7 @@
         ORDER BY M.SEQ DESC
     </select>
 
-    <select id="getMemberById" resultType="com.example.memberservicepractice.dto.MemberDto">
+    <select id="getMemberById" resultType="com.example.memberservicepractice.member.dto.MemberDto">
         SELECT SEQ, ID, NAME, PASSWORD, EMAIL, LEVEL_SEQ, APPLICANT, START_DATE, MODIFY_DATE, APPROVAL_DATE, ACCOUNT_STATE, PASSWORD_STATE, PHONE, REMARK, CEO, CLIENT, DEPARTMENT, JOB_GRADE, USER_ROLE FROM MEMBER WHERE ID=#{id}
     </select>
 
@@ -69,7 +102,7 @@
         SELECT COUNT(id) FROM MEMBER WHERE ID=#{id}
     </select>
 
-    <insert id="insertMember" parameterType="com.example.memberservicepractice.dto.MemberDto">
+    <insert id="insertMember" parameterType="com.example.memberservicepractice.member.dto.MemberDto">
         <selectKey keyProperty="seq" resultType="int" order="BEFORE">
             SELECT MEMBER_SEQ.NEXTVAL FROM DUAL
         </selectKey>
