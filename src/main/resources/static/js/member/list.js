@@ -2,13 +2,14 @@ $(".member-filter li").click(function() {
     if ($(this).attr('data-level') == 'total') {
         location.href="/list"
     } else {
+        let levelSeq = $(this).attr('data-level');
         $.ajax({
-            url: "/filter",
+            url: "/list/" + levelSeq,
             type: "GET",
-            data: {levelSeq : $(this).attr('data-level')},
+            data: {levelSeq : levelSeq},
             dataType: "json",
             success: function(data){
-                let client = '';
+                /*let client = '';
                 let state = '';
 
                 $(".table tbody").empty();
@@ -26,9 +27,8 @@ $(".member-filter li").click(function() {
                     } else {
                         state = '승인'
                     }
-
                     $(".table tbody").append("<tr><td>"+el.id+"</td><td>"+el.name+"</td><td>"+el.email+"</td><td>"+el.levelDto.levelName+"</td><td>"+client+"</td><td>"+state+"</td></tr>")
-                })
+                })*/
             }
         });
     }

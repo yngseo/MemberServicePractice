@@ -31,19 +31,19 @@
     </resultMap>
 
     <sql id="search">
-        <if test="type != null and keyword != null">
+        <if test="criteria.type != null and criteria.keyword != null">
             <trim prefix="(" suffix=") " prefixOverrides="OR">
-                <foreach item="type" collection="typeArr">
+                <foreach item="criteria.type" collection="criteria.typeArr">
                     <trim prefix="OR">
                         <choose>
-                            <when test="type =='I'.toString()">
-                                ID LIKE '%' || #{keyword} || '%'
+                            <when test="criteria.type =='I'.toString()">
+                                ID LIKE '%' || #{criteria.keyword} || '%'
                             </when>
-                            <when test="type =='N'.toString()">
-                                NAME LIKE '%' || #{keyword} || '%'
+                            <when test="criteria.type =='N'.toString()">
+                                NAME LIKE '%' || #{criteria.keyword} || '%'
                             </when>
-                            <when test="type =='C'.toString()">
-                                CLIENT LIKE '%' || #{keyword} || '%'
+                            <when test="criteria.type =='C'.toString()">
+                                CLIENT LIKE '%' || #{criteria.keyword} || '%'
                             </when>
                         </choose>
                     </trim>
@@ -52,15 +52,31 @@
         </if>
     </sql>
 
-    <select id="getTotal" resultType="int">
+    <select id="getTotalAdminList" resultType="int">
         SELECT COUNT(*)
         FROM MEMBER
         <where>
             <include refid="search"></include>
+            <if test="levelSeq != null">
+                AND LEVEL_SEQ = #{levelSeq}
+            </if>
+            <if test="levelSeq == null">
+                AND SEQ != 1
+            </if>
         </where>
     </select>
 
-    <select id="getListByAdmin" resultMap="MemberDto">
+    <select id="getTotalClientList" resultType="int">
+        SELECT COUNT(*)
+        FROM MEMBER
+        <where>
+            <include refid="search"></include>
+            AND LEVEL_SEQ = 4
+            AND CLIENT = #{name}
+        </where>
+    </select>
+
+    <select id="getListByAdmin" parameterType="HashMap" resultMap="MemberDto">
         SELECT M.*, L.LEVEL_NAME
         FROM (
             SELECT /*+ INDEX_DESC(MEMBER MEMBER_PK) */
@@ -68,18 +84,36 @@
             FROM MEMBER
             <where>
                 <include refid="search"></include>
-                <![CDATA[     AND ROWNUM <= #{pageNum} * #{amount} ]]>
+                <if test="levelSeq != null">
+                    AND LEVEL_SEQ = #{levelSeq}
+                </if>
+                <if test="levelSeq == null">
+                    AND SEQ != 1
+                </if>
+                <![CDATA[     AND ROWNUM <= #{criteria.pageNum} * #{criteria.amount} ]]>
             </where>
         ) M
         JOIN MEMBER_LEVEL L ON M.LEVEL_SEQ = L.SEQ
-        WHERE R > (#{pageNum}-1) * #{amount}
-        ORDER BY M.SEQ DESC
+        WHERE R > (#{criteria.pageNum}-1) * #{criteria.amount}
+        ORDER BY R
     </select>
 
     <select id="getListByClient" resultMap="MemberDto">
-        SELECT M.SEQ, M.ID, M.NAME, M.EMAIL, L.LEVEL_NAME, M.CLIENT, M.APPROVAL_DATE FROM MEMBER M JOIN MEMBER_LEVEL L ON M.LEVEL_SEQ = L.SEQ
-        WHERE M.LEVEL_SEQ = 4 AND CLIENT = #{name}
-        ORDER BY M.SEQ DESC
+        SELECT M.*, L.LEVEL_NAME
+        FROM (
+            SELECT /*+ INDEX_DESC(MEMBER MEMBER_PK) */
+            ROWNUM R, SEQ, ID, PASSWORD, NAME, EMAIL, LEVEL_SEQ, APPLICANT, START_DATE, MODIFY_DATE, APPROVAL_DATE, ACCOUNT_STATE, PASSWORD_STATE, PHONE, REMARK, CEO, CLIENT, DEPARTMENT, JOB_GRADE, USER_ROLE
+            FROM MEMBER
+            <where>
+                <include refid="search"></include>
+                AND LEVEL_SEQ = 4
+                AND CLIENT = #{name}
+            </where>
+            <![CDATA[     AND ROWNUM <= #{criteria.pageNum} * #{criteria.amount} ]]>
+        ) M
+        JOIN MEMBER_LEVEL L ON M.LEVEL_SEQ = L.SEQ
+        WHERE R > (#{criteria.pageNum}-1) * #{criteria.amount}
+        ORDER BY R
     </select>
 
     <select id="getMemberById" resultType="com.example.memberservicepractice.member.dto.MemberDto">

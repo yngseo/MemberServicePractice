@@ -19,24 +19,31 @@ public class MemberServiceImpl implements MemberService {
     @Autowired
     MemberRepository memberRepository;
 
-    @Override
+/*    @Override
     public int getTotal(Criteria criteria) {
         return memberRepository.getTotal(criteria);
-    }
+    }*/
+
+    public int getTotalAdminList(Criteria criteria, Integer levelSeq) { return  memberRepository.getTotalAdminList(criteria, levelSeq); }
 
     @Override
+    public int getTotalClientList(Criteria criteria, String name) {
+        return memberRepository.getTotalClientList(criteria, name);
+    }
+
+/*    @Override
     public List<MemberDto> getListByAdmin(Criteria criteria) {
         return memberRepository.getListByAdmin(criteria);
+    }*/
+
+    @Override
+    public List<MemberDto> getListByAdmin(Criteria criteria, Integer levelSeq) {
+        return memberRepository.getListByAdmin(criteria, levelSeq);
     }
 
     @Override
-    public List<MemberDto> getListByAdmin(Integer levelSeq) {
-        return memberRepository.getListByAdmin(levelSeq);
-    }
-
-    @Override
-    public List<MemberDto> getListByClient(String name) {
-        return memberRepository.getListByClient(name);
+    public List<MemberDto> getListByClient(Criteria criteria, String name) {
+        return memberRepository.getListByClient(criteria, name);
     }
 
     @Override

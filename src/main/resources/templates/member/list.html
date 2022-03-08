@@ -12,28 +12,29 @@
 <main layout:fragment="content">
     <div class="container">
         <h1>계정 목록</h1>
-        <div class="input-group mb-3 search-field">
-            <form action="/list" class="search-form" th:object="${criteria}">
-                <select class="custom-select search-select" name="type">
-                    <option value="" selected>선택</option>
-                    <option value="I">아이디</option>
-                    <option value="N">이름</option>
-                    <option value="C">소속</option>
-                </select>
-                <input type="text" class="form-control keyword-input" name="keyword">
-                <input type="hidden" name="pageNum" th:field="*{pageNum}">
-                <input type="hidden" name="amount" th:field="*{amount}">
-                <div class="input-group-append">
-                    <button class="btn btn-outline-secondary search-button" type="button"><i class="bi bi-search"></i></button>
-                </div>
-            </form>
+        <div class="list-nav">
+            <div class="filter-field">
+                <ul class="member-filter" th:if="${info.levelSeq == 1}">
+                    <li data-level="total"><a th:href="@{/list}">전체</a></li>
+                    <li data-level="2"><a th:href="@{/list/2}">직원</a></li>
+                    <li data-level="3"><a th:href="@{/list/3}">고객사</a></li>
+                    <li data-level="4"><a th:href="@{/list/4}">고객</a></li>
+                </ul>
+            </div>
+            <div class="input-group mb-3 search-field">
+                <form th:action="@{''}" class="search-form" th:object="${criteria}">
+                    <select class="custom-select search-select" name="type">
+                        <option value="" selected>선택</option>
+                        <option value="I">아이디</option>
+                        <option value="N">이름</option>
+                        <option value="C" th:if="${info.levelSeq == 1}">소속</option>
+                    </select>
+                    <input type="text" class="form-control keyword-input" name="keyword" aria-describedby="button-addon">
+                    <input type="hidden" name="amount" th:field="*{amount}">
+                    <button class="btn btn-outline-secondary search-button" type="button" id="button-addon"><i class="bi bi-search"></i></button>
+                </form>
+            </div>
         </div>
-<!--        <ul class="member-filter" th:if="${info.levelSeq == 1}">
-            <li data-level="total">전체</li>
-            <li data-level="2">직원</li>
-            <li data-level="3">고객사</li>
-            <li data-level="4">고객</li>
-        </ul>-->
         <table class="table">
             <thead>
             <tr>
@@ -63,10 +64,10 @@
             </tr>
             </tbody>
         </table>
-        <nav aria-label="Page navigation example" th:object="${pageMaker}">
+        <nav class="pagination-field" aria-label="Page navigation example" th:object="${pageMaker}">
             <ul class="pagination">
                 <li class="page-item">
-                    <a class="page-link" th:if="*{prev}" th:href="@{/list(pageNum=*{startPage - 1}, amount=${pageMaker.criteria.getAmount()})}" aria-label="Previous">
+                    <a class="page-link" th:if="*{prev}" th:with="first=${pageMaker.criteria.getListLink(pageMaker.startPage - 1)}" th:href="@{${first}}" aria-label="Previous">
                         <span aria-hidden="true">&laquo;</span>
                     </a>
                 </li>
@@ -75,7 +76,7 @@
                     <li class="page-item" th:unless="${pageMaker.criteria.getPageNum() == num}"><a class="page-link" th:text="${num}" th:with="url=${pageMaker.criteria.getListLink(num)}" th:href="@{${url}}"></a></li>
                 </th:block>
                 <li class="page-item">
-                    <a class="page-link" th:if="*{next}" th:href="@{/list(pageNum=*{endPage + 1}, amount=${pageMaker.criteria.getAmount()})}" aria-label="Next">
+                    <a class="page-link" th:if="*{next}" th:with="last=${pageMaker.criteria.getListLink(pageMaker.endPage + 1)}" th:href="@{${last}}" aria-label="Next">
                         <span aria-hidden="true">&raquo;</span>
                     </a>
                 </li>

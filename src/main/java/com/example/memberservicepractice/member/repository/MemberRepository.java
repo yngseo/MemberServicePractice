@@ -3,19 +3,24 @@ package com.example.memberservicepractice.member.repository;
 import com.example.memberservicepractice.common.Pagination.Criteria;
 import com.example.memberservicepractice.member.dto.MemberDto;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
 @Mapper
 public interface MemberRepository {
 
-    public int getTotal(Criteria criteria);
+    /*public int getTotal(Criteria criteria);*/
 
-    public List<MemberDto> getListByAdmin(Criteria criteria);
+    public int getTotalAdminList(Criteria criteria, Integer levelSeq);
 
-    public List<MemberDto> getListByAdmin(Integer levelSeq);
+    public int getTotalClientList(Criteria criteria, String name);
 
-    public List<MemberDto> getListByClient(String name);
+    /*public List<MemberDto> getListByAdmin(@Param("criteria") Criteria criteria);*/
+
+    public List<MemberDto> getListByAdmin(@Param("criteria") Criteria criteria, @Param("levelSeq") Integer levelSeq);
+
+    public List<MemberDto> getListByClient(@Param("criteria") Criteria criteria, @Param("name") String name);
 
     public MemberDto getMemberById(String id);
 

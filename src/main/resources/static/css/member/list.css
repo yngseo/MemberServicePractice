@@ -21,16 +21,26 @@ h1 {
     font-weight: bold;
 }
 
-.search-field {
-    width: 400px;
+.list-nav {
+    display: flex;
+    justify-content: space-between;
 }
 
-.keyword-input {
-    width: 200px!important;
+.search-field, .search-select {
+    width: auto;
+}
+
+.search-form {
+    display: flex;
 }
 
 .bi-search {
     color: white;
+}
+
+.pagination-field {
+    display: flex;
+    justify-content: center;
 }
 
 .create-btn {

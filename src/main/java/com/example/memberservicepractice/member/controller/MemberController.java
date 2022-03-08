@@ -68,17 +68,27 @@ public class MemberController {
     }
 
     // 계정 조회 페이지
-    @GetMapping("list")
-    public String memberList (Model model, Authentication authentication, @ModelAttribute("criteria") Criteria criteria) {
+    @GetMapping("/list")
+    public String memberList (Model model, Authentication authentication, @ModelAttribute("criteria") Criteria criteria, Integer levelSeq) {
         MemberDto memberDto = memberService.getLoginMember(authentication);
         model.addAttribute("info", memberDto);
         String name = memberDto.getName();
         if (memberDto.getLevelSeq() == 1) {
-            model.addAttribute("list", memberService.getListByAdmin(criteria));
-            model.addAttribute("pageMaker", new PageDto(memberService.getTotal(criteria), 10, criteria));
+            model.addAttribute("list", memberService.getListByAdmin(criteria, levelSeq));
+            model.addAttribute("pageMaker", new PageDto(memberService.getTotalAdminList(criteria, levelSeq), 10, criteria));
         } else if (memberDto.getLevelSeq() == 3) {
-            model.addAttribute("list", memberService.getListByClient(name));
+            model.addAttribute("list", memberService.getListByClient(criteria, name));
+            model.addAttribute("pageMaker", new PageDto(memberService.getTotalClientList(criteria, name), 10, criteria));
         }
+        return "member/list";
+    }
+
+    @GetMapping("/list/{levelSeq}")
+    public String memberListUsingFilter(Model model, Authentication authentication, @ModelAttribute("criteria") Criteria criteria, @PathVariable("levelSeq") Integer levelSeq) {
+        MemberDto memberDto = memberService.getLoginMember(authentication);
+        model.addAttribute("info", memberDto);
+        model.addAttribute("list", memberService.getListByAdmin(criteria, levelSeq));
+        model.addAttribute("pageMaker", new PageDto(memberService.getTotalAdminList(criteria, levelSeq), 10, criteria));
         return "member/list";
     }
 
@@ -90,14 +100,14 @@ public class MemberController {
         return "member/get";
     }
 
-    @GetMapping("/filter")
+/*    @GetMapping("/filter")
     @JsonIgnore
     @ResponseBody
     public List<MemberDto> getListUsingFilter (@RequestParam("levelSeq") Integer levelSeq, Model model, Authentication authentication) {
         MemberDto memberDto = memberService.getLoginMember(authentication);
         model.addAttribute("member", memberDto);
         return memberService.getListByAdmin(levelSeq);
-    }
+    }*/
 
     @PutMapping("/approval")
     @ResponseBody

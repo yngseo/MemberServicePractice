@@ -70,6 +70,7 @@
                         <label th:for="ceo">대표자</label>
                         <input type="text" class="form-control" name="ceo" placeholder="대표자를 입력해주세요">
                     </div>
+                    <input th:if="${info.levelSeq == 3}" type="hidden" class="form-control" name="ceo">
                     <div class="form-group client-field" th:if="${info.levelSeq == 1}">
                         <label th:for="client">소속회사</label>
                         <!--<input type="text" class="form-control" name="client" placeholder="소속회사를 입력해주세요">-->

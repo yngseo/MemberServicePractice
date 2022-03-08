@@ -8,13 +8,17 @@ import java.util.List;
 
 public interface MemberService {
 
-    public int getTotal(Criteria criteria);
+    /*public int getTotal(Criteria criteria);*/
 
-    public List<MemberDto> getListByAdmin(Criteria criteria); // 관리자 계정 전체 조회
+    public int getTotalAdminList(Criteria criteria, Integer levelSeq);
 
-    public List<MemberDto> getListByAdmin(Integer levelSeq); // 관리자 계정 전체 필터 조회
+    public int getTotalClientList(Criteria criteria, String name);
 
-    public List<MemberDto> getListByClient(String name); // 고객사 계정 전체 조회
+    /*ublic List<MemberDto> getListByAdmin(Criteria criteria); // 관리자 계정 전체 조회*/
+
+    public List<MemberDto> getListByAdmin(Criteria criteria, Integer levelSeq); // 관리자 계정 전체 필터 조회
+
+    public List<MemberDto> getListByClient(Criteria criteria, String name); // 고객사 계정 전체 조회
 
     public MemberDto getMemberById(String id); // 계정 상세 정보 조회
 
