@@ -12,9 +12,13 @@
     justify-content: space-between;
 }
 
-.member-filter li{
+.member-filter-item {
     cursor: pointer;
     font-weight: bold;
+}
+
+.member-filter-item a {
+    color: #21409A;
 }
 
 h1 {
@@ -34,13 +38,33 @@ h1 {
     display: flex;
 }
 
+.search-button {
+    background-color: #21409A;
+}
+
 .bi-search {
     color: white;
+}
+
+.list-each {
+    cursor: pointer;
+}
+
+.waiting-text {
+    color: red;
+}
+
+.complete-text {
+    color: blue;
 }
 
 .pagination-field {
     display: flex;
     justify-content: center;
+}
+
+.page-link {
+    color: #21409A;
 }
 
 .create-btn {

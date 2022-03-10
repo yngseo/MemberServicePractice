@@ -30,7 +30,7 @@ public class MemberDto {
     @NotEmpty(message = "필수 입력 정보입니다.")
     @Email(message = "올바른 형식의 이메일 주소여야 합니다.")
     private String email;
-    @NotNull(message = "필수 입력 정보입니다.")
+    @NotNull(message = "필수 선택 정보입니다.")
     private Integer levelSeq;
     private String applicant;
     @DateTimeFormat(pattern = "yyyy/MM/dd")

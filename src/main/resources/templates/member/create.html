@@ -10,7 +10,7 @@
     <script defer th:src="@{/js/member/create.js}" type="text/javascript" charset="utf-8"></script>
 </th:block>
 <main layout:fragment="content">
-    <div class="container">
+    <section class="container">
         <form class="frm" action="/create" method="post" th:object="${member}">
             <div class="info-section">
                 <div class="title-wrapper">
@@ -22,7 +22,7 @@
                         <span class="login-id" name="applicant" th:text="${info.id}" th:data-levelSeq="${info.levelSeq}"></span>
                         <input type="hidden" name="applicant" th:value="${info.id}">
                     </div>
-                    <div class="form-group" th:if="${info.levelSeq == 1}">
+                    <div class="form-group levelSeq-form" th:if="${info.levelSeq == 1}">
                         <label class="custom-label" th:for="levelSeq">계정 유형</label>
                         <div class="form-check form-check-inline">
                             <input class="form-check-input" type="radio" name="levelSeq" value="2"><label class="form-check-label">직원</label>
@@ -35,27 +35,28 @@
                         </div>
                         <p class="error-message" th:if="${#fields.hasErrors('levelSeq')}" th:errors="*{levelSeq}">Incorrect
                             date</p>
+                        <!--<input type="hidden" name="_levelSeq" value="on"/>-->
                     </div>
                     <input type="hidden" name="levelSeq"  value="4" th:if="${info.levelSeq == 3}">
                     <div class="form-group id-form">
                         <label th:for="id">아이디</label>
                         <div class="id-field">
-                            <input type="text" name="id" class="form-control" placeholder="아이디 입력해주세요" th:field="*{id}"
-                                   th:errorclass="field-error" check-result="fail" required>
+                            <input type="text" class="form-control id-input" placeholder="아이디 입력해주세요" th:field="*{id}"
+                                   th:errorclass="field-error" check-result="fail">
                             <button type="button" class="btn btn-primary" id="check-btn">ID 중복 확인</button>
                         </div>
                         <p class="error-message" th:if="${#fields.hasErrors('id')}" th:errors="*{id}">Incorrect date</p>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group name-form">
                         <label th:for="name">이름(회사명)</label>
-                        <input type="text" class="form-control" name="name" placeholder="이름(회사명)을 입력해주세요" th:field="*{name}"
-                               th:errorclass="field-error" required>
+                        <input type="text" class="form-control name-input" placeholder="이름(회사명)을 입력해주세요" th:field="*{name}"
+                               th:errorclass="field-error">
                         <p class="error-message" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Incorrect date</p>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group email-form">
                         <label th:for="email">이메일</label>
-                        <input type="email" class="form-control" name="email" placeholder="이메일을 입력해주세요" th:field="*{email}"
-                               th:errorclass="field-error" required>
+                        <input type="email" class="form-control email-input" placeholder="이메일을 입력해주세요" th:field="*{email}"
+                               th:errorclass="field-error">
                         <p class="error-message" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Incorrect date</p>
                     </div>
                 </div>
@@ -87,25 +88,28 @@
                     </div>
                     <div class="form-group department-field">
                         <label th:for="department">부서</label>
-                        <input type="text" class="form-control" name="department" placeholder="부서를 입력해주세요">
+                        <input type="text" class="form-control" th:field="*{department}" placeholder="부서를 입력해주세요">
                     </div>
                     <div class="form-group jobGrade-field">
                         <label th:for="jobGrade">직급</label>
-                        <input type="text" class="form-control" name="jobGrade" placeholder="회사를 입력해주세요">
+                        <input type="text" class="form-control" th:field="*{jobGrade}" placeholder="회사를 입력해주세요">
                     </div>
                     <div class="form-group">
                         <label th:for="phone">연락처</label>
-                        <input type="text" class="form-control" name="phone" placeholder="연락처를 입력해주세요">
+                        <input type="text" class="form-control" th:field="*{phone}" placeholder="연락처를 입력해주세요">
                     </div>
                     <div class="form-group">
                         <label th:for="remark">비고</label>
-                        <input type="text" class="form-control" name="remark" placeholder="비고를 입력해주세요">
+                        <input type="text" class="form-control" th:field="*{remark}" placeholder="비고를 입력해주세요">
                     </div>
                 </div>
             </div>
-            <button type="button" class="btn btn-primary" id="submit-btn">계정 생성 요청</button>
+            <div class="button-field">
+                <button type="button" class="btn btn-secondary" id="cancel-btn">취소</button>
+                <button type="button" class="btn btn-primary" id="submit-btn">계정 생성 요청</button>
+            </div>
         </form>
         <br/>
-    </div>
+    </section>
 </main>
 </html>

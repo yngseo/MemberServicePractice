@@ -23,8 +23,6 @@ public class MemberController {
 
     @Autowired
     MemberService memberService;
-    @Autowired
-    UserDetailsServiceImpl userDetailService;
 
     @RequestMapping(value = {"/login"}, method = {RequestMethod.GET, RequestMethod.POST})
     public String login(Model model) {
@@ -48,16 +46,13 @@ public class MemberController {
 
     @GetMapping("/password/{id}")
     public String updatePasswordForm(@ModelAttribute("member") MemberDto memberDto, @PathVariable("id") String id) {
-        /*memberDto = memberService.getLoginMember(authentication);
-        model.addAttribute("loginId", memberDto.getId());*/
         return "password";
     }
 
     @PutMapping("/password/{id}")
-    public String updatePassword(Model model, @PathVariable("id") String id, @RequestParam("currentPw") String currentPw, @RequestParam("password") String password, @Validated(ValidationGroups.password.class) @ModelAttribute("member") MemberDto memberDto, BindingResult bindingResult) {
-        /*memberDto = memberService.getLoginMember(authentication);
-        String id = memberDto.getId();*/
-        if (memberService.updatePassword(currentPw, password, id) == 0) { // 수정 필요
+    public String updatePassword(Model model, Authentication authentication, @PathVariable("id") String id, @RequestParam("currentPw") String currentPw, @RequestParam("password") String password, @Validated(ValidationGroups.password.class) @ModelAttribute("member") MemberDto memberDto, BindingResult bindingResult) {
+        memberDto = memberService.getLoginMember(authentication);
+        if (!memberService.confirmPassword(currentPw, memberDto.getPassword())) {
             model.addAttribute("message","비밀번호가 일치하지 않습니다.");
             return "password";
         } else if (bindingResult.hasErrors()) {
@@ -69,14 +64,19 @@ public class MemberController {
 
     // 계정 조회 페이지
     @GetMapping("/list")
-    public String memberList (Model model, Authentication authentication, @ModelAttribute("criteria") Criteria criteria, Integer levelSeq) {
+    public String memberList (Model model, Authentication authentication, Criteria criteria, Integer levelSeq) {
         MemberDto memberDto = memberService.getLoginMember(authentication);
         model.addAttribute("info", memberDto);
-        String name = memberDto.getName();
-        if (memberDto.getLevelSeq() == 1) {
+        String name = null;
+        if (memberDto.getLevelSeq() == 3) {
+            name = memberDto.getName();
+        } else if (memberDto.getLevelSeq() == 4) {
+            name = memberDto.getClient();
+        }
+        if (memberDto.getLevelSeq() == 1 || memberDto.getLevelSeq() == 2) {
             model.addAttribute("list", memberService.getListByAdmin(criteria, levelSeq));
             model.addAttribute("pageMaker", new PageDto(memberService.getTotalAdminList(criteria, levelSeq), 10, criteria));
-        } else if (memberDto.getLevelSeq() == 3) {
+        } else if (memberDto.getLevelSeq() == 3 || memberDto.getLevelSeq() == 4) {
             model.addAttribute("list", memberService.getListByClient(criteria, name));
             model.addAttribute("pageMaker", new PageDto(memberService.getTotalClientList(criteria, name), 10, criteria));
         }
@@ -84,7 +84,7 @@ public class MemberController {
     }
 
     @GetMapping("/list/{levelSeq}")
-    public String memberListUsingFilter(Model model, Authentication authentication, @ModelAttribute("criteria") Criteria criteria, @PathVariable("levelSeq") Integer levelSeq) {
+    public String memberListUsingFilter(Model model, Authentication authentication, Criteria criteria, @PathVariable("levelSeq") Integer levelSeq) {
         MemberDto memberDto = memberService.getLoginMember(authentication);
         model.addAttribute("info", memberDto);
         model.addAttribute("list", memberService.getListByAdmin(criteria, levelSeq));
@@ -93,10 +93,11 @@ public class MemberController {
     }
 
     @GetMapping("/get/{id}")
-    public String get(@PathVariable("id") String id, Model model, Authentication authentication) {
+    public String get(@PathVariable("id") String id, Model model, Authentication authentication, Criteria criteria) {
         MemberDto memberDto = memberService.getLoginMember(authentication);
         model.addAttribute("info", memberDto);
         model.addAttribute("member", memberService.getMemberById(id));
+        model.addAttribute("criteria", criteria.getListLink(criteria.getPageNum()));
         return "member/get";
     }
 

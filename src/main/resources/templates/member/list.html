@@ -7,18 +7,22 @@
     <link rel="stylesheet" th:href="@{/css/member/list.css}"/>
 </th:block>
 <th:block layout:fragment="script">
-    <script defer th:src="@{/js/member/list.js}" type="text/javascript" charset="utf-8"></script>
+    <script defer th:src="@{/js/member/list.js}" type="text/javascript" charset="utf-8">
+    </script>
+    <script defer type="text/javascript" th:inline="javascript">
+         let criteria = [[ ${pageMaker.criteria.getListLink(criteria.getPageNum())} ]]
+    </script>
 </th:block>
 <main layout:fragment="content">
     <div class="container">
         <h1>계정 목록</h1>
         <div class="list-nav">
             <div class="filter-field">
-                <ul class="member-filter" th:if="${info.levelSeq == 1}">
-                    <li data-level="total"><a th:href="@{/list}">전체</a></li>
-                    <li data-level="2"><a th:href="@{/list/2}">직원</a></li>
-                    <li data-level="3"><a th:href="@{/list/3}">고객사</a></li>
-                    <li data-level="4"><a th:href="@{/list/4}">고객</a></li>
+                <ul class="member-filter" th:if="${info.levelSeq == 1} or ${info.levelSeq == 2}">
+                    <li class="member-filter-item" data-level="total"><a th:href="@{/list}">전체</a></li>
+                    <li class="member-filter-item" data-level="2"><a th:href="@{/list/2}">직원</a></li>
+                    <li class="member-filter-item" data-level="3"><a th:href="@{/list/3}">고객사</a></li>
+                    <li class="member-filter-item" data-level="4"><a th:href="@{/list/4}">고객</a></li>
                 </ul>
             </div>
             <div class="input-group mb-3 search-field">
@@ -41,26 +45,26 @@
                 <th scope="col">아이디</th>
                 <th scope="col">이름</th>
                 <th scope="col">이메일</th>
-                <th th:if="${info.levelSeq == 1}" scope="col">등급</th>
-                <th th:if="${info.levelSeq == 1}" scope="col">소속</th>
-                <th th:if="${info.levelSeq == 3}" scope="col">부서</th>
-                <th th:if="${info.levelSeq == 3}" scope="col">직급</th>
+                <th th:if="${info.levelSeq == 1} or ${info.levelSeq == 2}" scope="col">등급</th>
+                <th th:if="${info.levelSeq == 1} or ${info.levelSeq == 2}" scope="col">소속</th>
+                <th th:if="${info.levelSeq == 3} or ${info.levelSeq == 4}" scope="col">부서</th>
+                <th th:if="${info.levelSeq == 3} or ${info.levelSeq == 4}" scope="col">직급</th>
                 <th scope="col">상태</th>
             </tr>
             </thead>
             <tbody>
-            <tr th:each="list : ${list}">
+            <tr th:each="list : ${list}" class="list-each">
                 <td th:text="${list.id}"></td>
                 <td th:text="${list.name}"></td>
                 <td th:text="${list.email}"></td>
-                <td th:if="${info.levelSeq == 1}" th:text="${list.levelDto.levelName}"></td>
-                <td th:if="${info.levelSeq == 3}" th:text="${list.department}"></td>
-                <td th:if="${info.levelSeq == 1} and ${list.levelDto.levelName == '직원'}">CMT정보통신</td>
-                <td th:if="${info.levelSeq == 1} and ${list.levelDto.levelName == '고객사'}" th:text="${list.name}"></td>
-                <td th:if="${info.levelSeq == 1} and ${list.levelDto.levelName == '고객'}" th:text="${list.client}"></td>
-                <td th:if="${info.levelSeq == 3}" th:text="${list.jobGrade}"></td>
-                <td th:if="${list.approvalDate == null}">미승인</td>
-                <td th:unless="${list.approvalDate == null}">승인</td>
+                <td th:if="${info.levelSeq == 1} or ${info.levelSeq == 2}" th:text="${list.levelDto.levelName}"></td>
+                <td th:if="${info.levelSeq == 3} or ${info.levelSeq == 4}" th:text="${list.department}"></td>
+                <td th:if="(${info.levelSeq == 1} or ${info.levelSeq == 2}) and ${list.levelDto.levelName == '직원'}">CMT정보통신</td>
+                <td th:if="(${info.levelSeq == 1} or ${info.levelSeq == 2}) and ${list.levelDto.levelName == '고객사'}" th:text="${list.name}"></td>
+                <td th:if="(${info.levelSeq == 1} or ${info.levelSeq == 2}) and ${list.levelDto.levelName == '고객'}" th:text="${list.client}"></td>
+                <td th:if="${info.levelSeq == 3} or ${info.levelSeq == 4}" th:text="${list.jobGrade}"></td>
+                <td th:if="${list.approvalDate == null}" class="waiting-text">미승인</td>
+                <td th:unless="${list.approvalDate == null}" class="complete-text">승인</td>
             </tr>
             </tbody>
         </table>
@@ -86,7 +90,7 @@
                 <input type="hidden" name="amount" th:field="*{amount}">
             </form>-->
         </nav>
-        <button type="button" class="btn btn-primary create-btn"><a href="/create"> 계정 생성 요청</a></button>
+        <button type="button" class="btn btn-primary create-btn" th:if="${info.levelSeq == 1} or ${info.levelSeq == 3}"><a href="/create"> 계정 생성 요청</a></button>
     </div>
 </main>
 </html>

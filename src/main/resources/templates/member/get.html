@@ -8,6 +8,9 @@
 </th:block>
 <th:block layout:fragment="script">
     <script defer th:src="@{/js/member/get.js}" type="text/javascript" charset="utf-8"></script>
+    <script defer type="text/javascript" th:inline="javascript">
+        let criteria = [[ ${criteria} ]]
+    </script>
 </th:block>
 <main layout:fragment="content">
     <div class="container">
@@ -41,7 +44,7 @@
                     <span th:if="${member.approvalDate == null}">승인 대기 중</span>
                     <span th:if="${info.levelSeq == 1} and ${member.approvalDate != null}"><button class="btn btn-primary password-btn"
                                                                                                    type="button">초기화</button></span>
-                    <span th:if="${info.levelSeq == 3} and ${member.approvalDate != null}">사용 가능</span>
+                    <span th:if="${info.levelSeq != 1} and ${member.approvalDate != null}">사용 가능</span>
                 </div>
             </div>
         </div>
@@ -77,7 +80,7 @@
                 </div>
             </div>
         </div>
-        <button type="button" class="btn btn-primary list-btn"><a href="/list">목록</a></button>
+        <button type="button" class="btn btn-primary list-btn">목록</button>
     </div>
 </main>
 </html>

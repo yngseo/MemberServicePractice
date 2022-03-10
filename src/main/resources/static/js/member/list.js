@@ -36,7 +36,7 @@ $(".member-filter li").click(function() {
 
 $("tbody tr").click(function() {
     let id = $(this).children().eq(0).text();
-    location.href = "/get/"+id;
+    location.href = "/get/" + id + criteria;
 });
 
 $(".search-button").click(function() {

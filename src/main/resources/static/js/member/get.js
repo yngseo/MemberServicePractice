@@ -42,3 +42,8 @@ $(".password-btn").click(function () {
         return false;
     }
 });
+
+$(".list-btn").click(function () {
+    location.href = document.referrer;
+    /*location.href = "/list" + criteria;*/ // 필터
+});

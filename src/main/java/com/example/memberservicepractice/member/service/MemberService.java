@@ -8,13 +8,9 @@ import java.util.List;
 
 public interface MemberService {
 
-    /*public int getTotal(Criteria criteria);*/
-
     public int getTotalAdminList(Criteria criteria, Integer levelSeq);
 
     public int getTotalClientList(Criteria criteria, String name);
-
-    /*ublic List<MemberDto> getListByAdmin(Criteria criteria); // 관리자 계정 전체 조회*/
 
     public List<MemberDto> getListByAdmin(Criteria criteria, Integer levelSeq); // 관리자 계정 전체 필터 조회
 
@@ -24,7 +20,9 @@ public interface MemberService {
 
     public int updateMemberAccountState(String id); // 계정 승인
 
-    public int updateMemberPasswordState(String id); // 비밀번호 초기화 해제
+    public int updateMemberPasswordState(String id); // 비밀번호 초기화
+
+    public boolean confirmPassword(String currentPw, String password); // 비밀번호 확인
 
     public int updatePassword(String currentPw, String password, String id); // 비밀번호 변경
 

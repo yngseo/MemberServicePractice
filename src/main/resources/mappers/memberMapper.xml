@@ -121,7 +121,7 @@
     </select>
 
     <update id="updateMemberAccountState">
-        UPDATE MEMBER SET APPROVAL_DATE = SYSDATE WHERE ID = #{id}
+        UPDATE MEMBER SET PASSWORD = #{password} , APPROVAL_DATE = SYSDATE WHERE ID = #{id}
     </update>
 
     <update id="updateMemberPasswordState">
@@ -140,7 +140,7 @@
         <selectKey keyProperty="seq" resultType="int" order="BEFORE">
             SELECT MEMBER_SEQ.NEXTVAL FROM DUAL
         </selectKey>
-        INSERT INTO MEMBER VALUES (#{seq}, #{id}, #{password}, #{name}, #{email}, #{levelSeq}, #{applicant}, SYSDATE, null, null, 'A', 'I', #{phone}, #{remark}, #{ceo}, #{client}, #{department}, #{jobGrade}, #{userRole})
+        INSERT INTO MEMBER VALUES (#{seq}, #{id}, null, #{name}, #{email}, #{levelSeq}, #{applicant}, SYSDATE, null, null, 'A', 'I', #{phone}, #{remark}, #{ceo}, #{client}, #{department}, #{jobGrade}, #{userRole})
     </insert>
 
     <select id="getClientList" resultType="String">

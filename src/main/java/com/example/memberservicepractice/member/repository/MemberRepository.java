@@ -24,7 +24,7 @@ public interface MemberRepository {
 
     public MemberDto getMemberById(String id);
 
-    public int updateMemberAccountState(String id);
+    public int updateMemberAccountState(String password, String id);
 
     public int updateMemberPasswordState(String password, String id);
 

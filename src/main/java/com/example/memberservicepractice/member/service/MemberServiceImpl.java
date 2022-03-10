@@ -7,6 +7,7 @@ import com.example.memberservicepractice.member.repository.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
@@ -18,6 +19,9 @@ public class MemberServiceImpl implements MemberService {
 
     @Autowired
     MemberRepository memberRepository;
+
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
 /*    @Override
     public int getTotal(Criteria criteria) {
@@ -53,12 +57,14 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public int updateMemberAccountState(String id) {
-        return memberRepository.updateMemberAccountState(id);
+        String randomPw = getRamdomPassword(10); // 난수 처리
+        System.out.println("비밀번호 : " + randomPw);
+        String password = passwordEncoder.encode(randomPw);
+        return memberRepository.updateMemberAccountState(password, id);
     }
 
     @Override
     public int updateMemberPasswordState(String id) {
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(); // bean 설정
         String randomPw = getRamdomPassword(10); // 난수 처리
         System.out.println("비밀번호 : " + randomPw);
         String password = passwordEncoder.encode(randomPw);
@@ -66,13 +72,13 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
+    public boolean confirmPassword (String currentPw, String password) {
+        return passwordEncoder.matches(currentPw, password);
+    }
+
+    @Override
     public int updatePassword(String currentPw, String password, String id) {
-        MemberDto memberDto = memberRepository.getMemberById(id); // 기능 분리
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        if (passwordEncoder.matches(currentPw, memberDto.getPassword())) {
-            return memberRepository.updatePassword(passwordEncoder.encode(password), id);
-        }
-        return 0; // boolean
+        return memberRepository.updatePassword(passwordEncoder.encode(password), id);
     }
 
     @Override
@@ -83,10 +89,6 @@ public class MemberServiceImpl implements MemberService {
     @Override
    /* @Transactional(rollbackFor = Exception.class)*/ // commit, rollback 자동 수행 (특정 예외 발생 시 rollback)
     public void insertMember(MemberDto memberDto) {
-        String password = getRamdomPassword(10); // 난수 처리
-        System.out.println("비밀번호 : " + password);
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        memberDto.setPassword(passwordEncoder.encode(password));
         if (memberDto.getLevelSeq() == 2) {
             memberDto.setUserRole("ROLE_EMP");
         } else if (memberDto.getLevelSeq() == 3) {

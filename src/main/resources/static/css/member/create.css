@@ -2,6 +2,10 @@
     color: red;
 }
 
+.success-message {
+    color: green;
+}
+
 .container {
     height: 100%;
     padding: 50px;
@@ -31,10 +35,10 @@ h1, h2, label {
     padding-right: 20px;
 }
 
-#check-btn {
-    width: 130px;
+.button-field {
+    float: right;
 }
 
-#submit-btn {
-    float: right;
+#check-btn {
+    width: 130px;
 }

@@ -7,15 +7,15 @@ import org.springframework.stereotype.Component;
 @Component
 public class AuthorizationChecker {
 
-    public String check(Authentication authentication) {
+    public boolean check(Authentication authentication) {
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         if (!(userDetails.getMember() instanceof MemberDto)) {
-            return null;
+            return false;
         }
         if (userDetails.getMember().getPasswordState() == 'I') {
-            return null;
+            return false;
         }
-    return userDetails.getMember().getUserRole().substring(5);
+    return true;
     }
 
 }

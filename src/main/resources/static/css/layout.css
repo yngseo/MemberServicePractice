@@ -86,7 +86,7 @@ footer {
     background-color: #fbfbfb;
 }
 
-button {
+.btn-primary {
     background: #21409A!important;
     border-color: #21409A!important;
 }

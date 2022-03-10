@@ -1,6 +1,7 @@
 package com.example.memberservicepractice.member.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.*;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -10,6 +11,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.WebAttributes;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
@@ -27,15 +29,21 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     UserDetailsServiceImpl userDetailsService;
 
+    @Bean
+    public PasswordEncoder passwordEncoder(){
+        return new BCryptPasswordEncoder();
+    }
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
                 .antMatchers("/login", "/css/**", "/js/**", "/image/**").permitAll() // 로그인 권한은 누구나, resources파일도 모든권한
                 // 접근 허용
-                .antMatchers("/password/**").hasAnyRole("ADMIN","EMP","CLIENT","CLIENTEMP")
-                .antMatchers("/list/**", "/create").hasAnyRole("ADMIN","CLIENT") // 접근 제한 필요
-                .antMatchers("/main").access("hasRole("+"@authorizationChecker.check(authentication)"+")") // 비밀번호 상태가 'I'일 시 접근 제한
+                .antMatchers("/password/**", "/myInfo", "/list").hasAnyRole("ADMIN","EMP","CLIENT","CLIENTEMP")
+                .antMatchers("/list/**").hasAnyRole("ADMIN","EMP")
+                .antMatchers("/create").hasAnyRole("ADMIN","CLIENT") // 접근 체크 필요
+                .antMatchers("/main", "/myInfo", "/list", "/list/**", "/create").access("@authorizationChecker.check(authentication)") // 비밀번호 상태가 'I'일 시 접근 제한
                 .anyRequest().authenticated()
                 .and()
                 .csrf().disable()
