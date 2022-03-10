@@ -40,10 +40,10 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/login", "/css/**", "/js/**", "/image/**").permitAll() // 로그인 권한은 누구나, resources파일도 모든권한
                 // 접근 허용
-                .antMatchers("/password/**", "/myInfo", "/list").hasAnyRole("ADMIN","EMP","CLIENT","CLIENTEMP")
-                .antMatchers("/list/**").hasAnyRole("ADMIN","EMP")
-                .antMatchers("/create").hasAnyRole("ADMIN","CLIENT") // 접근 체크 필요
-                .antMatchers("/main", "/myInfo", "/list", "/list/**", "/create").access("@authorizationChecker.check(authentication)") // 비밀번호 상태가 'I'일 시 접근 제한
+                .antMatchers("/main", "/myInfo", "/list").access("@authorizationChecker.check(authentication) and hasAnyRole('ADMIN','EMP','CLIENT','CLIENTEMP')")
+                .antMatchers("/password/**").hasAnyRole("ADMIN","EMP","CLIENT","CLIENTEMP")
+                .antMatchers("/list/**").access("@authorizationChecker.check(authentication) and hasAnyRole('ADMIN','EMP')")
+                .antMatchers("/create").access("@authorizationChecker.check(authentication) and hasAnyRole('ADMIN', 'CLIENT')") // 비밀번호 상태가 'I'일 시 접근 제한
                 .anyRequest().authenticated()
                 .and()
                 .csrf().disable()
