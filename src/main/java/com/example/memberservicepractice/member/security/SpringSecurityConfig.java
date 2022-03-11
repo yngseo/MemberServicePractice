@@ -40,9 +40,9 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/login", "/css/**", "/js/**", "/image/**").permitAll() // 로그인 권한은 누구나, resources파일도 모든권한
                 // 접근 허용
-                .antMatchers("/main", "/myInfo", "/list", "/get/**").access("@authorizationChecker.check(authentication) and hasAnyRole('ADMIN','EMP','CLIENT','CLIENTEMP')")
-                .antMatchers("/list/**").access("@authorizationChecker.check(authentication) and hasAnyRole('ADMIN','EMP')")
-                .antMatchers("/create").access("@authorizationChecker.check(authentication) and hasAnyRole('ADMIN', 'CLIENT')") // 비밀번호 상태가 'I'일 시 접근 제한
+                .antMatchers("/main", "/myInfo", "/list", "/get/**").access("@authorizationChecker.passwordStateCheck(authentication) and hasAnyRole('ADMIN','EMP','CLIENT','CLIENTEMP')")
+                .antMatchers("/list/**").access("@authorizationChecker.passwordStateCheck(authentication) and hasAnyRole('ADMIN','EMP')")
+                .antMatchers("/create").access("@authorizationChecker.passwordStateCheck(authentication) and hasAnyRole('ADMIN', 'CLIENT')")
                 .antMatchers("/password/**").hasAnyRole("ADMIN","EMP","CLIENT","CLIENTEMP")
                 .anyRequest().authenticated()
                 .and()
@@ -90,10 +90,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                                     errorMsg = "계정 승인 처리 중입니다. 승인 후 로그인이 가능합니다.";
                                     request.setAttribute("errorMsg", errorMsg);
                                     request.getRequestDispatcher("/login?error=true").forward(request, response);
-                                } /*else if(exception instanceof CredentialsExpiredException) {
-                                    response.sendRedirect("/password/"+id);
-                                    System.out.println("비밀번호 오류");
-                                }*/
+                                }
                             }
                         }
                 )

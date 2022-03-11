@@ -1,12 +1,10 @@
 package com.example.memberservicepractice.member.controller;
 
-import com.example.memberservicepractice.common.Pagination.Criteria;
-import com.example.memberservicepractice.common.Pagination.PageDto;
+import com.example.memberservicepractice.common.pagination.Criteria;
+import com.example.memberservicepractice.common.pagination.PageDto;
 import com.example.memberservicepractice.member.dto.MemberDto;
-import com.example.memberservicepractice.member.security.UserDetailsServiceImpl;
 import com.example.memberservicepractice.member.service.MemberService;
 import com.example.memberservicepractice.member.security.ValidationGroups;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -16,7 +14,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @Controller
 public class MemberController {
@@ -83,7 +80,7 @@ public class MemberController {
         return "member/list";
     }
 
-    @GetMapping("/list/{levelSeq}")
+    @GetMapping("/list/{levelSeq}") // 쿼리문으로 변경
     public String memberListUsingFilter(Model model, Authentication authentication, Criteria criteria, @PathVariable("levelSeq") Integer levelSeq) {
         MemberDto memberDto = memberService.getLoginMember(authentication);
         model.addAttribute("info", memberDto);
@@ -100,15 +97,6 @@ public class MemberController {
         model.addAttribute("criteria", criteria.getListLink(criteria.getPageNum()));
         return "member/get";
     }
-
-/*    @GetMapping("/filter")
-    @JsonIgnore
-    @ResponseBody
-    public List<MemberDto> getListUsingFilter (@RequestParam("levelSeq") Integer levelSeq, Model model, Authentication authentication) {
-        MemberDto memberDto = memberService.getLoginMember(authentication);
-        model.addAttribute("member", memberDto);
-        return memberService.getListByAdmin(levelSeq);
-    }*/
 
     @PutMapping("/approval")
     @ResponseBody

@@ -1,6 +1,6 @@
 package com.example.memberservicepractice.member.service;
 
-import com.example.memberservicepractice.common.Pagination.Criteria;
+import com.example.memberservicepractice.common.pagination.Criteria;
 import com.example.memberservicepractice.member.dto.MemberDto;
 import org.springframework.security.core.Authentication;
 

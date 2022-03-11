@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class AuthorizationChecker {
 
-    public boolean check(Authentication authentication) {
+    public boolean passwordStateCheck(Authentication authentication) { // 비밀번호 상태가 'I'일 시 접근 제한
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         if (!(userDetails.getMember() instanceof MemberDto)) {
             return false;

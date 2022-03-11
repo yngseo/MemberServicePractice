@@ -59,7 +59,7 @@ $("#submit-btn").click(function () {
 
     if(levelSeq == 1 && !$("input[name=levelSeq]").is(":checked")) {
         $(".levelSeq-form p").remove();
-        $(".levelSeq-form").append("<p class='error-message'>필수 선택입니다.</p>");
+        $(".levelSeq-form").append("필수 선택입니다."); // html로
         return false;
     }
 

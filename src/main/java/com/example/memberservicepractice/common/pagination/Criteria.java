@@ -1,4 +1,4 @@
-package com.example.memberservicepractice.common.Pagination;
+package com.example.memberservicepractice.common.pagination;
 
 import lombok.Data;
 import org.springframework.stereotype.Component;
@@ -25,7 +25,7 @@ public class Criteria {
     }
 
     // UriComponentsBuilder를 이용하여 파라미터 자동 생성
-    public String getListLink (int pageNum) {
+    public String getListLink (int pageNum) { // dto로 이동
          UriComponents uriComponents = UriComponentsBuilder.newInstance()
                  .queryParam("pageNum", pageNum)
                  .queryParam("amount", amount)

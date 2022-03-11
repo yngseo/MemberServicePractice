@@ -1,4 +1,4 @@
-package com.example.memberservicepractice.common.Pagination;
+package com.example.memberservicepractice.common.pagination;
 
 import lombok.Data;
 import org.springframework.stereotype.Component;
@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 @Data
 public class PageDto {
 
-    private int pageCount;
+    private int pageCount;  // 참조형으로 변경
     private int startPage;
     private int endPage;
     private int realEnd;

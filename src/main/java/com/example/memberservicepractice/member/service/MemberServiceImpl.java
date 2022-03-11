@@ -1,12 +1,11 @@
 package com.example.memberservicepractice.member.service;
 
-import com.example.memberservicepractice.common.Pagination.Criteria;
+import com.example.memberservicepractice.common.pagination.Criteria;
 import com.example.memberservicepractice.member.dto.MemberDto;
 import com.example.memberservicepractice.member.security.UserDetailsImpl;
 import com.example.memberservicepractice.member.repository.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 

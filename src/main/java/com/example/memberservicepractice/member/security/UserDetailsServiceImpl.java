@@ -14,15 +14,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Autowired
     MemberRepository memberMapper;
 
-/*    @Override
-    public UserDetails loadUserByUsername(String id) throws UsernameNotFoundException {
-        MemberDto memberDto = memberMapper.getMemberById(id);
-        if (memberDto == null) {
-            throw new UsernameNotFoundException("User not authorized.");
-        }
-        return (UserDetails) memberDto;
-    }*/
-
     @Override
     public UserDetails loadUserByUsername(String id) throws UsernameNotFoundException {
         return new UserDetailsImpl(loadUserByUsernameProvider(id));
@@ -34,4 +25,5 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         MemberDto member = memberMapper.getMemberById(id);
         return member;
     }
+
 }
