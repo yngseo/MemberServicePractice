@@ -13,7 +13,7 @@ import javax.validation.constraints.Pattern;
 import java.util.Date;
 
 @Data
-public class MemberDto {
+public class MemberDto { // 유효성 검사 분리하기
 
     private Integer seq;
     @NotEmpty(message = "필수 입력 정보입니다.")

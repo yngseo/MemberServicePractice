@@ -54,9 +54,10 @@ $("#check-btn").click(function () {
 
 // form submit
 $("#submit-btn").click(function () {
+    let levelSeq = $(".login-id").attr("data-levelSeq");
     let emailReg = /^[a-z0-9\.\-_]+@([a-z0-9\-]+\.)+[a-z]{2,6}$/;
 
-    if(!$("input[name=levelSeq]").is(":checked")) {
+    if(levelSeq == 1 && !$("input[name=levelSeq]").is(":checked")) {
         $(".levelSeq-form p").remove();
         $(".levelSeq-form").append("<p class='error-message'>필수 선택입니다.</p>");
         return false;
@@ -106,6 +107,7 @@ $("#cancel-btn").click(function () {
     location.href = document.referrer;
 });
 
+// id 중복 체크
 let inputID;
 function checkId () {
     $.ajax({
